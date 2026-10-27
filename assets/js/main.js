@@ -262,7 +262,7 @@
     set('mobileFab', { display: m ? 'flex' : 'none' });
 
     // 커튼(미션 01)이 없는 페이지(사전 홍보 teaser.html)는 스크롤 전환 구간 없이 KV 한 화면
-    set('zone', { height: m ? 'auto' : $('curtain') ? 'calc(210vh + 600px)' : '100vh' });
+    set('zone', { height: m ? 'auto' : $('curtain') ? '210vh' : '100vh' });
     set('zoneSticky', { position: m ? 'relative' : 'sticky', height: m ? 'auto' : '100vh', overflow: m ? 'visible' : 'hidden' });
     set('kv', m ? { position: 'relative', inset: 'auto', marginTop: (document.getElementById('top').offsetHeight || 80) + 'px', height: 'calc(100dvh - ' + (document.getElementById('top').offsetHeight || 80) + 'px)', minHeight: '0' } : { position: 'absolute', inset: '80px 0 0 0', marginTop: '0', height: '', minHeight: '' });
     set('kvBrandRow', { zoom: m ? '0.8' : '' });
@@ -377,7 +377,7 @@
     window.addEventListener('resize', this.onResize);
     const zone = document.getElementById('zone'), curtain = document.getElementById('curtain'), curtainBg = document.getElementById('curtainBg'), cue = document.getElementById('kvCue');
     if (!zone) return;
-    const HOLD_PX = 600, BAND = 45;
+    const HOLD_PX = 0, BAND = 45; // 미션 01이 다 드러난 뒤 화면을 붙잡아 두던 구간(600px)은 자동 전환이 생겨 제거
     // 스크롤 줌/팬은 모든 KV 레이어에 동일 적용 (마우스 패럴랙스만 레이어별 depth로 차등)
     // 스크롤 줌은 끔: 전환 중 레이어 배율이 매 프레임 바뀌면 큰 레이어들을 계속 다시 그려야 해서 배경이 비는(분홍 바탕 노출) 원인이 됨
     const SCROLL_ZOOM = 0, SCROLL_PAN = 4;
