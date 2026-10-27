@@ -167,8 +167,8 @@
   componentDidMount() {
     const cta = document.getElementById('kvCta');
     if (cta) {
-      cta.addEventListener('mouseenter', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.12)'; cta.style.transform = 'translateY(-2px)'; });
-      cta.addEventListener('mouseleave', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6))'; cta.style.transform = ''; });
+      cta.addEventListener('mouseenter', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.35)'; cta.style.transform = 'translateY(-2px)'; });
+      cta.addEventListener('mouseleave', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.2)'; cta.style.transform = ''; });
     }
     const mm = q => window.matchMedia && window.matchMedia(q);
     this.reduce = mm('(prefers-reduced-motion: reduce)').matches;
@@ -232,6 +232,7 @@
     this.mqTab.removeEventListener('change', this.onMq);
     document.removeEventListener('keydown', this.onKey);
     document.removeEventListener('mousemove', this.onMouse);
+    if (this.onSnapWheel) { window.removeEventListener('wheel', this.onSnapWheel); window.removeEventListener('keydown', this.onSnapKey); window.removeEventListener('scroll', this.onSnapScroll); clearTimeout(this.snapIdleT); }
     window.removeEventListener('resize', this.onResize);
     if (this.io) this.io.disconnect();
     if (this.odoIO) this.odoIO.disconnect();
@@ -267,7 +268,7 @@
     set('kvBrandRow', { zoom: m ? '0.8' : '' });
     document.querySelectorAll('[data-mission-label]').forEach(el => { if (el.dataset.fs0 === undefined) el.dataset.fs0 = el.style.fontSize; el.style.fontSize = m ? '10.5px' : el.dataset.fs0; });
     document.querySelectorAll('[data-mission-title]').forEach(el => { if (el.dataset.fs0 === undefined) el.dataset.fs0 = el.style.fontSize; el.style.fontSize = m ? '34px' : el.dataset.fs0; });
-    set('kvCta', { filter: 'drop-shadow(0 6px 10px rgba(0,0,0,.6))' });
+    set('kvCta', { filter: 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.2)' });
     set('kvDatePc', { display: m ? 'none' : '' });
     set('kvDateMo', { display: m ? 'flex' : 'none' });
     set('kvSubCopy', { fontSize: m ? 'min(4.25vw,17px)' : '', letterSpacing: m ? '-0.02em' : '', lineHeight: m ? '1.5' : '' });
@@ -281,10 +282,11 @@
     set('kvStage', m
       ? { display: 'none' }
       : { display: 'block', top: '50%', bottom: 'auto', width: 'max(100vw,calc((100vh - 80px) * 1.7778))', height: 'max(56.25vw,calc(100vh - 80px))', transform: 'translate(-50%,-50%)' });
+    // PC 커튼: 마스크는 고정(CSS), 커튼을 위로 끌어올리고(transform) 안쪽은 반대로 내려 제자리 유지 → 매 프레임 마스크 재계산 없이 GPU 이동만
     set('curtain', m
-      ? { position: 'relative', inset: 'auto', maskImage: 'none', webkitMaskImage: 'none', pointerEvents: 'auto' }
-      : { position: 'absolute', inset: '0' });
-    set('curtainInner', m ? { position: 'relative', inset: 'auto', padding: '72px 20px' } : { position: 'absolute', inset: '0', padding: 'calc(80px + 2vh) clamp(20px,6vw,80px) 4vh' });
+      ? { position: 'relative', inset: 'auto', height: 'auto', transform: 'none', maskImage: 'none', webkitMaskImage: 'none', pointerEvents: 'auto' }
+      : { position: 'absolute', inset: '0 0 auto 0', height: '', transform: '', maskImage: '', webkitMaskImage: '' });
+    set('curtainInner', m ? { position: 'relative', inset: 'auto', height: 'auto', transform: 'none', padding: '72px 20px' } : { position: 'absolute', inset: '0 0 auto 0', height: '', transform: '', padding: 'calc(80px + 2vh) clamp(20px,6vw,80px) 4vh' });
     set('curtainBg', m ? { transform: 'scale(1)' } : {});
     set('smoke', { display: m || this.reduce ? 'none' : 'block' });
     if (m) document.querySelectorAll('[data-kv-layer]').forEach(el => { el.style.transform = ''; });
@@ -377,11 +379,51 @@
     if (!zone) return;
     const HOLD_PX = 600, BAND = 45;
     // 스크롤 줌/팬은 모든 KV 레이어에 동일 적용 (마우스 패럴랙스만 레이어별 depth로 차등)
-    const SCROLL_ZOOM = 0.04, SCROLL_PAN = 4;
+    // 스크롤 줌은 끔: 전환 중 레이어 배율이 매 프레임 바뀌면 큰 레이어들을 계속 다시 그려야 해서 배경이 비는(분홍 바탕 노출) 원인이 됨
+    const SCROLL_ZOOM = 0, SCROLL_PAN = 4;
     const layers = Array.from(document.querySelectorAll('[data-kv-layer]')).map(el => ({ el, depth: (parseFloat(el.dataset.depth) || 0) * (parseFloat(el.dataset.dir) || 1), zoom: parseFloat(el.dataset.zoom) || 0 }));
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
     const progress = () => { const total = zone.offsetHeight - window.innerHeight - HOLD_PX; return total <= 0 ? 0 : clamp(-zone.getBoundingClientRect().top / total, 0, 1); };
     let kvMx = 0, kvMy = 0, tx = 0, ty = 0;
+    // KV ↔ 미션 01 전환 구간 자동 스크롤: 천천히 스크롤하면 버벅이므로, 구간 안에서 한 번 스크롤하면
+    // 끝(미션 01 완전히 드러남) 또는 처음(KV)까지 스르륵 이동. 이동 중 입력은 무시
+    const SNAP_MS = 1300;
+    const snapRange = () => { const top = zone.getBoundingClientRect().top + window.scrollY, total = zone.offsetHeight - window.innerHeight - HOLD_PX; return [top, top + Math.max(0, total)]; };
+    let snapping = false, lastY = window.scrollY;
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const snapTo = y => {
+      const y0 = window.scrollY; if (Math.abs(y - y0) < 2) return;
+      snapping = true; const t0 = performance.now();
+      const step = now => { const k = Math.min(1, (now - t0) / SNAP_MS); window.scrollTo(0, y0 + (y - y0) * ease(k)); if (k < 1) requestAnimationFrame(step); else { snapping = false; lastY = window.scrollY; } };
+      requestAnimationFrame(step);
+    };
+    const canSnap = () => !this.isMobile && !this.reduce && !!curtain;
+    this.onSnapWheel = e => {
+      if (!canSnap()) return;
+      if (snapping) { e.preventDefault(); return; }
+      const [a, b] = snapRange(), y = window.scrollY;
+      if (e.deltaY > 0 && y >= a - 1 && y < b - 1) { e.preventDefault(); snapTo(b); }
+      else if (e.deltaY < 0 && y > a + 1 && y <= b + 1) { e.preventDefault(); snapTo(a); }
+    };
+    this.onSnapKey = e => {
+      if (!canSnap() || /input|textarea/i.test((e.target && e.target.tagName) || '')) return;
+      const down = ['ArrowDown', 'PageDown', ' '].includes(e.key), up = ['ArrowUp', 'PageUp'].includes(e.key);
+      if (!down && !up) return;
+      if (snapping) { e.preventDefault(); return; }
+      const [a, b] = snapRange(), y = window.scrollY;
+      if (down && y >= a - 1 && y < b - 1) { e.preventDefault(); snapTo(b); }
+      else if (up && y > a + 1 && y <= b + 1) { e.preventDefault(); snapTo(a); }
+    };
+    // 스크롤바 드래그·아래에서 올라오는 경우 등 구간 중간에 멈추면 진행 방향으로 마저 이동
+    this.onSnapScroll = () => {
+      if (!canSnap() || snapping) { lastY = window.scrollY; return; }
+      const [a, b] = snapRange(), y = window.scrollY, dir = y - lastY; lastY = y;
+      clearTimeout(this.snapIdleT);
+      if (y > a + 2 && y < b - 2) this.snapIdleT = setTimeout(() => { if (!snapping) snapTo(dir >= 0 ? b : a); }, 120);
+    };
+    window.addEventListener('wheel', this.onSnapWheel, { passive: false });
+    window.addEventListener('keydown', this.onSnapKey);
+    window.addEventListener('scroll', this.onSnapScroll, { passive: true });
     this.onMouse = e => {
       if (this.reduce || this.isMobile) return;
       const r = zone.getBoundingClientRect();
@@ -393,18 +435,23 @@
     const AUTO_PERIOD = 12; // 한 번 왕복(초)
     const AUTO_Y = 0.3;     // 타원 궤도의 위아래 비율 (좌우 대비, 0이면 좌우만)
     const renderSmoke = this.initSmoke();
-    let lastP = -1;
+    let lastP = -1, lastH = -1;
+    const sticky = document.getElementById('zoneSticky'), curtainInner = document.getElementById('curtainInner');
 
     const frame = now => {
       if (this.isMobile) { this.raf = 0; return; }
       const t = now / 1000, p = progress();
       this.kvP = p;
       // 스크롤 진행도가 바뀔 때만 커튼 마스크 갱신 (화면 전체 마스크를 매 프레임 다시 그리지 않도록)
-      if (p !== lastP) {
+      const H = sticky ? sticky.offsetHeight : window.innerHeight;
+      if (p !== lastP || H !== lastH) {
         const c = -BAND + (1 - p) * (100 + 2 * BAND);
-        const grad = 'linear-gradient(to bottom, transparent ' + (c - BAND).toFixed(2) + '%, white ' + (c + BAND).toFixed(2) + '%)';
-        if (curtain) { curtain.style.maskImage = grad; curtain.style.webkitMaskImage = grad; curtain.style.pointerEvents = p > 0.9 ? 'auto' : 'none'; }
-        if (curtainBg) curtainBg.style.transform = 'scale(' + (1.1 - 0.1 * (1 - Math.pow(1 - p, 3))).toFixed(4) + ')';
+        // 커튼 윗변(= 마스크 투명 시작점)을 (c - BAND)% 위치로. 안쪽 내용은 반대로 이동시켜 화면에 고정
+        const off = ((c - BAND) / 100 * H).toFixed(1);
+        if (curtain) { curtain.style.transform = 'translate3d(0,' + off + 'px,0)'; curtain.style.pointerEvents = p > 0.9 ? 'auto' : 'none'; }
+        if (curtainInner) curtainInner.style.transform = 'translate3d(0,' + (-off) + 'px,0)';
+        lastH = H;
+        // (커튼 배경 줌아웃 효과는 뺌: 배율이 매 프레임 바뀌면 큰 배경을 계속 다시 그려 버벅임)
         if (cue) cue.style.opacity = Math.max(0, 1 - p / 0.12).toFixed(3);
         if (this.odoMask) this.odoMask(c, BAND);
         lastP = p;
