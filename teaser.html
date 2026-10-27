@@ -217,7 +217,7 @@ a.hdr-btn{color:#469CFF;}
 .teaser .kv-box-3{-webkit-mask-image:url(assets/images/teaser-title.webp);mask-image:url(assets/images/teaser-title.webp);}
 /* 티저 타이틀 뒤 흰 딤 */
 .teaser .teaser-title-wrap{position:relative;z-index:1;}
-.teaser .teaser-title-dim{position:absolute;inset:-14% -10%;background:radial-gradient(ellipse at center,rgba(255,255,255,.7) 0%,rgba(255,255,255,.45) 45%,rgba(255,255,255,0) 72%);filter:blur(10px);pointer-events:none;}
+.teaser .teaser-title-dim{position:absolute;inset:-14% -10%;background:radial-gradient(ellipse at center,rgba(255,255,255,.42) 0%,rgba(255,255,255,.25) 45%,rgba(255,255,255,0) 72%);filter:blur(10px);pointer-events:none;}
 /* 숫자 롤링(오도미터): 글자마다 그라디언트를 직접 입힘(변형 레이어에선 부모 background-clip:text가 안 먹음) */
 
 /* 티저 등장 애니메이션 (teaser.js가 .t-in을 순서대로 붙임). 기존 transform과 겹치지 않도록 translate/scale 개별 속성 사용 */
@@ -229,6 +229,14 @@ a.hdr-btn{color:#469CFF;}
 .teaser.t-anim #kvDatePc:not(.t-in),.teaser.t-anim #kvDateMo:not(.t-in){translate:0 18px;}
 .teaser.t-anim #kvSubCopy:not(.t-in){translate:0 10px;}
 /* 굴러가기 전엔 쉼표·M도 숨김 → 롤링 시작과 함께 나타남 */
+/* 티저 PC 로고: index와 같은 좌표 (teaser.js가 PC에서 로고 줄을 KV 바로 아래로 옮김. top·폭·높이는 index의 타이틀 묶음 기준과 동일 공식) */
+@media (min-width:769px){
+.teaser #kv > #kvBrandRow{position:absolute;z-index:31;top:clamp(40px,5vh,64px);left:50%;transform:translateX(-50%);width:min(calc(100% - 10vw),58vw);height:clamp(52px,5vw,90px);margin:0;}
+.teaser #kvBrandRow .kv-img-2{display:none;}
+.teaser #kvBrandRow .kv-img,.teaser #kvBrandRow .kv-pica-logo{position:absolute;top:50%;translate:0 calc(-50% - clamp(28px,3.7vh,46px));}
+.teaser #kvBrandRow .kv-img{left:0;height:clamp(52px,4.4vw,84px);margin-right:0;}
+.teaser #kvBrandRow .kv-pica-logo{right:0;height:clamp(30px,2.5vw,48px);}
+}
 </style>
 
 <!-- KV 첫 화면 이미지: CSS/JS를 기다리지 않고 바로 받아두기 위한 preload (PC는 와이드 배경, 모바일은 세로 배경) -->
