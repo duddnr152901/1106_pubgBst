@@ -185,14 +185,31 @@ a.hdr-btn{color:#469CFF;}
 .teaser #kvMainTitle .kv-title{filter:drop-shadow(0 0 2.5px #fff) drop-shadow(0 0 7px rgba(255,255,255,.9)) drop-shadow(0 0 16px rgba(255,255,255,.5));}
 .teaser .kv-img,.teaser .kv-img-2{filter:brightness(0) invert(1);}
 .teaser #kvSubCopy{color:#fff;-webkit-text-stroke:0;text-shadow:0 2px 8px rgba(0,0,0,.5);}
-.teaser #kvStart{display:inline-flex;align-items:center;justify-content:center;width:clamp(240px,19vw,360px);aspect-ratio:668/170;margin-bottom:clamp(-18px,-1.6vh,-8px);font-size:clamp(22px,1.8vw,33px);letter-spacing:.03em;color:#fff;-webkit-text-stroke:0;isolation:isolate;text-shadow:0 2px 6px rgba(0,0,0,.55);}
+.teaser #kvStart{display:inline-flex;align-items:center;justify-content:center;width:clamp(216px,17vw,320px);aspect-ratio:668/170;margin-bottom:clamp(-18px,-1.6vh,-8px);font-size:clamp(22px,1.8vw,33px);letter-spacing:.03em;color:#fff;-webkit-text-stroke:0;isolation:isolate;text-shadow:0 2px 6px rgba(0,0,0,.55);}
 /* 배지 이미지만 어둡게(글자는 그대로) — 투명한 모서리까지 덮지 않도록 오버레이 대신 밝기 필터 */
 .teaser #kvStart::before{content:"";position:absolute;inset:0;z-index:-1;background:url(assets/images/cta.webp) center/100% 100% no-repeat;filter:brightness(.68) drop-shadow(0 0 2.5px #fff) drop-shadow(0 0 7px rgba(255,255,255,.9)) drop-shadow(0 0 16px rgba(255,255,255,.5));}
 .teaser .teaser-em{font-weight:inherit;color:#ff6fb5;}
-.teaser #kvDatePc{padding:clamp(10px,1.5vh,16px) clamp(26px,3.2vw,44px);font-size:clamp(16px,1.4vw,24px);}
+/* 티저 PC 정보: index와 같은 "PICA 마일리지 최대 39,000M" 평행사변형 상자 (기존 어두운 상자 스타일 해제) */
+.teaser #kvDatePc{padding:0;background:none;border:0;clip-path:none;isolation:auto;filter:drop-shadow(0 0 2px rgba(255,255,255,.8)) drop-shadow(0 0 8px rgba(255,255,255,.45));}
+.kv-hl-band{--sl:clamp(20px,1.6vw,30px);--bw:3px;position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:.35em;padding:clamp(10px,1.3vh,16px) calc(var(--sl) + clamp(22px,2vw,38px));background:#ff2d8e;clip-path:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);}
+.kv-hl-band::before{content:"";position:absolute;inset:0 calc(var(--bw) * 1.6);z-index:-1;background:radial-gradient(ellipse 50% 90% at center,rgba(0,0,0,.3) 0%,rgba(0,0,0,0) 100%),linear-gradient(90deg,rgba(255,45,142,.46) 0%,rgba(255,45,142,0) 12%,rgba(255,45,142,0) 88%,rgba(255,45,142,.46) 100%),linear-gradient(90deg,#3a0a22 0%,#4b0f31 50%,#3a0a22 100%);clip-path:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);}
+/* 상자 금속 스크래치 텍스처 (텍스쳐셈.jpg를 띠 모양으로 잘라 흑백·경량화). overlay로 자주색 위에 긁힌 질감만 얹음 */
+.kv-hl-band::after{content:"";position:absolute;inset:0 calc(var(--bw) * 1.6);z-index:-1;background:url(assets/images/kv/box-texture.webp) center/cover no-repeat;mix-blend-mode:overlay;opacity:.75;pointer-events:none;clip-path:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);}
+.kv-hl-pre,.kv-hl-num{display:block;font-family:'Pretendard',sans-serif;font-weight:900;line-height:1;letter-spacing:-.01em;}
+/* 상자 양옆 >> 아이콘 (오른쪽은 좌우 반전해서 가운데를 향하게) */
+.kv-hl-arrow{display:block;flex:none;width:clamp(15px,1.15vw,22px);height:auto;aspect-ratio:1;fill:#fff;stroke:#fff;stroke-width:40;stroke-linejoin:round;overflow:visible;opacity:.3;margin-right:.4em;}
+.kv-hl-arrow-r{margin-right:0;margin-left:.4em;transform:scaleX(-1);}
+/* 화살표가 가운데(최대 39,000M) 쪽으로 톡톡 밀려 들어오며 밝아짐 → 시선 유도 */
+@keyframes kvHlNudgeL{0%,100%{translate:0 0;opacity:.3;}45%{translate:.35em 0;opacity:.6;}}
+@keyframes kvHlNudgeR{0%,100%{translate:0 0;opacity:.3;}45%{translate:-.35em 0;opacity:.6;}}
+.kv-hl-arrow{animation:kvHlNudgeL 1.2s cubic-bezier(.45,0,.25,1) infinite;}
+.kv-hl-arrow-r{animation-name:kvHlNudgeR;}
+@media (prefers-reduced-motion:reduce){.kv-hl-arrow{animation:none;}}
+.kv-hl-pre{font-size:clamp(18px,1.45vw,28px);color:#fff;}
+.kv-hl-num{font-size:clamp(22px,1.9vw,36px);background:linear-gradient(180deg,#ffd0e8 10%,#ff5aa8 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));padding-right:.08em;}
 .teaser #kvDateMo .kv-txt-6{font-size:15px;}
 .teaser #kvBrandRow{margin-bottom:0;left:-.4vw;}
-.teaser #kvSubCopy{position:absolute;z-index:31;left:50%;bottom:clamp(24px,7vh,72px);transform:translateX(-50%);white-space:nowrap;}
+.teaser #kvSubCopy{position:absolute;z-index:31;left:50%;bottom:clamp(24px,7vh,72px);transform:translateX(-50%);white-space:nowrap;padding:.5em 1.6em;border:1.5px solid #d93d8a;background:rgba(75,15,49,.6);}
 .teaser .kv-img{height:clamp(42px,4vw,72px);margin-right:clamp(-16px,-.8vw,-6px);}
 .teaser .kv-img-2{height:clamp(22px,1.9vw,35px);}
 .teaser .kv-pica-logo{height:clamp(24px,2.1vw,38px);}
@@ -349,7 +366,7 @@ a.hdr-btn{color:#469CFF;}
             <div class="kv-box-3" data-layer-mask="title"></div>
           </div>
         </div>
-        <p id="kvDatePc" data-t-in="3"><span class="kv-txt-3" aria-hidden="true"></span><span class="kv-txt-4" aria-hidden="true"></span><b class="teaser-em">최대 39,000M</b> + 특별 PUBG 인게임 아이템</p>
+        <div id="kvDatePc" data-t-in="3"><div class="kv-hl-band"><svg class="kv-hl-arrow" viewBox="0 -960 960 960" aria-hidden="true"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg><span class="kv-hl-pre">최대</span><b class="kv-hl-num">39,000M</b><span class="kv-hl-pre">+ 특별 PUBG 인게임 아이템</span><svg class="kv-hl-arrow kv-hl-arrow-r" viewBox="0 -960 960 960" aria-hidden="true"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg></div></div>
         <div id="kvDateMo" data-t-in="3"><div class="kv-box-4"><span class="kv-txt-6"><b class="teaser-em">최대 39,000M</b> + 특별 PUBG 인게임 아이템</span></div></div>
       </div>
       <p id="kvSubCopy" data-t-in="4">11월 6일부터 참여 가능합니다</p>

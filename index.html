@@ -115,6 +115,15 @@ a.hdr-btn{color:#469CFF;}
 .kv-img{display:block;height:clamp(52px,5vw,90px);width:auto;aspect-ratio:1944/992;margin-right:clamp(-20px,-1vw,-8px);}
 .kv-img-2{display:block;height:clamp(28px,2.4vw,44px);width:auto;aspect-ratio:2954/2843;}
 .kv-pica-logo{display:block;height:clamp(30px,2.6vw,48px);width:auto;aspect-ratio:534.6/181.3;}
+/* PC: 배그 로고는 왼쪽, 피카플레이 로고는 오른쪽으로 벌려 배치. 로고 줄 높이는 그대로 둬서 타이틀 위치는 변하지 않음 */
+@media (min-width:769px){
+#kvBrandRow{width:min(100%,58vw);height:clamp(52px,5vw,90px);}
+#kvMainTitle{margin-top:clamp(-40px,-3vh,-16px);}
+#kvBrandRow .kv-img-2{display:none;}
+#kvBrandRow .kv-img,#kvBrandRow .kv-pica-logo{position:absolute;top:50%;translate:0 calc(-50% - clamp(28px,3.7vh,46px));}
+#kvBrandRow .kv-img{left:0;height:clamp(52px,4.4vw,84px);margin-right:0;}
+#kvBrandRow .kv-pica-logo{right:0;height:clamp(30px,2.5vw,48px);}
+}
 #kvMainTitle{position:relative;z-index:1;width:min(max(min(80vw,420px),33.5vw),670px);aspect-ratio:1431/539;isolation:isolate;}
 #kvMainTitle .kv-title{filter:drop-shadow(0 0 1.5px #fff4f9) drop-shadow(0 0 1.5px #fff4f9) drop-shadow(0 0 14px rgba(255,255,255,.95)) drop-shadow(0 0 40px rgba(255,255,255,.6)) drop-shadow(0 8px 28px rgba(120,20,70,.2));}
 .kv-title{display:block;width:100%;height:100%;}
@@ -122,18 +131,37 @@ a.hdr-btn{color:#469CFF;}
 .kv-box-3::before{content:"";position:absolute;top:0;bottom:0;left:0;width:250%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.95) 50%,transparent 65%);animation:kvTitleSweep 3s ease-in-out infinite;will-change:transform;}
 #kvSubCopy{position:relative;z-index:2;font-size:20px;font-weight:600;color:#111;text-align:center;text-wrap:pretty;word-break:keep-all;-webkit-text-stroke:4px #fff;paint-order:stroke fill;text-shadow:0 0 4px #fff,0 0 10px #fff,0 0 22px rgba(255,255,255,.85);}
 .kv-txt-2{color:#6e0f40;}
+.kv-sub-mo{display:none;}
+/* PC 기간 줄: 흰 글씨 + 검정 박스 (서브카피의 흰 테두리·글로우 제거) */
+.kv-sub-pc{display:inline-block;padding:.35em 2.6em;background:linear-gradient(90deg,rgba(75,15,49,0) 0%,rgba(75,15,49,.85) 22%,rgba(75,15,49,.85) 78%,rgba(75,15,49,0) 100%);color:#fff;-webkit-text-stroke:0;text-shadow:none;}
+@media (max-width:768px){.kv-sub-pc{display:none;}.kv-sub-mo{display:inline;}}
 #kvSubBr{display:none;}
-#kvDatePc{position:relative;z-index:2;padding:clamp(8px,1.2vh,12px) clamp(20px,2.6vw,32px);font-size:clamp(14px,1.1vw,18px);font-weight:600;color:#ffeef6;position:relative;isolation:isolate;background:rgba(26,18,25,.78);border:1px solid rgba(255,111,181,.55);border-radius:0;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);text-align:center;}
-.kv-txt-3{position:absolute;top:0;bottom:0;left:0;width:20%;z-index:-1;pointer-events:none;opacity:.55;background:url(assets/images/date-dots4.webp) left center/auto 100% no-repeat;-webkit-mask-image:linear-gradient(to right,#000 25%,transparent 100%);mask-image:linear-gradient(to right,#000 25%,transparent 100%);}
-.kv-txt-4{position:absolute;top:0;bottom:0;right:0;width:20%;z-index:-1;pointer-events:none;opacity:.55;background:url(assets/images/date-dots4.webp) left center/auto 100% no-repeat;-webkit-mask-image:linear-gradient(to right,#000 25%,transparent 100%);mask-image:linear-gradient(to right,#000 25%,transparent 100%);transform:scaleX(-1);}
+/* PC 서브카피: 위·아래 줄은 서브카피 스타일, 가운데 "최대 39,000M"은 평행사변형 상자(양쪽 같은 방향 사선, 사방 핑크 테두리) 위에 크게 */
+#kvDatePc{position:relative;z-index:2;margin-top:clamp(-8px,-.6vh,-3px);display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.7vh,10px);text-align:center;}
+.kv-hl-line{font-size:clamp(18px,1.45vw,28px);font-weight:700;line-height:1.3;color:#111;word-break:keep-all;-webkit-text-stroke:4px #fff;paint-order:stroke fill;text-shadow:0 0 4px #fff,0 0 10px #fff,0 0 22px rgba(255,255,255,.85);}
+.kv-hl-line.kv-txt-2{color:#6e0f40;}
+.kv-hl-band{--sl:clamp(20px,1.6vw,30px);--bw:3px;position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:.35em;padding:clamp(10px,1.3vh,16px) calc(var(--sl) + clamp(22px,2vw,38px));background:#ff2d8e;clip-path:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);}
+.kv-hl-band::before{content:"";position:absolute;inset:0 calc(var(--bw) * 1.6);z-index:-1;background:radial-gradient(ellipse 50% 90% at center,rgba(0,0,0,.3) 0%,rgba(0,0,0,0) 100%),linear-gradient(90deg,rgba(255,45,142,.46) 0%,rgba(255,45,142,0) 12%,rgba(255,45,142,0) 88%,rgba(255,45,142,.46) 100%),linear-gradient(90deg,#3a0a22 0%,#4b0f31 50%,#3a0a22 100%);clip-path:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);}
+/* 상자 금속 스크래치 텍스처 (텍스쳐셈.jpg를 띠 모양으로 잘라 흑백·경량화). overlay로 자주색 위에 긁힌 질감만 얹음 */
+.kv-hl-band::after{content:"";position:absolute;inset:0 calc(var(--bw) * 1.6);z-index:-1;background:url(assets/images/kv/box-texture.webp) center/cover no-repeat;mix-blend-mode:overlay;opacity:.75;pointer-events:none;clip-path:polygon(var(--sl) 0,100% 0,calc(100% - var(--sl)) 100%,0 100%);}
+.kv-hl-pre,.kv-hl-num{display:block;font-family:'Pretendard',sans-serif;font-weight:900;line-height:1;letter-spacing:-.01em;}
+/* 상자 양옆 >> 아이콘 (오른쪽은 좌우 반전해서 가운데를 향하게) */
+.kv-hl-arrow{display:block;flex:none;width:clamp(15px,1.15vw,22px);height:auto;aspect-ratio:1;fill:#fff;stroke:#fff;stroke-width:40;stroke-linejoin:round;overflow:visible;opacity:.3;margin-right:.4em;}
+.kv-hl-arrow-r{margin-right:0;margin-left:.4em;transform:scaleX(-1);}
+/* 화살표가 가운데(최대 39,000M) 쪽으로 톡톡 밀려 들어오며 밝아짐 → 시선 유도 */
+@keyframes kvHlNudgeL{0%,100%{translate:0 0;opacity:.3;}45%{translate:.35em 0;opacity:.6;}}
+@keyframes kvHlNudgeR{0%,100%{translate:0 0;opacity:.3;}45%{translate:-.35em 0;opacity:.6;}}
+.kv-hl-arrow{animation:kvHlNudgeL 1.2s cubic-bezier(.45,0,.25,1) infinite;}
+.kv-hl-arrow-r{animation-name:kvHlNudgeR;}
+@media (prefers-reduced-motion:reduce){.kv-hl-arrow{animation:none;}}
+.kv-hl-pre{font-size:clamp(18px,1.45vw,28px);color:#fff;}
+.kv-hl-num{font-size:clamp(22px,1.9vw,36px);background:linear-gradient(180deg,#ffd0e8 10%,#ff5aa8 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));padding-right:.08em;}
+#kvCta{position:relative;z-index:2;pointer-events:auto;margin-top:0;display:inline-flex;align-items:center;justify-content:center;width:clamp(230px,19vw,360px);aspect-ratio:668/170;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(19px,1.55vw,29px);letter-spacing:.02em;color:#fff;background:url(assets/images/cta.webp) center/100% 100% no-repeat;text-shadow:0 2px 6px rgba(0,0,0,.45);transition:transform .15s ease, filter .15s ease;}
+#kvCtaWrap{position:absolute;z-index:999;left:50%;transform:translateX(-50%);bottom:clamp(24px,5vh,56px);display:flex;justify-content:center;pointer-events:none;}
 #kvDateMo{position:relative;z-index:2;display:none;flex-direction:column;gap:5px;width:min(80vw,300px);}
 .kv-box-4{display:flex;justify-content:center;align-items:center;gap:10px;padding:8px 12px;background:rgba(26,18,25,.82);border:1px solid rgba(255,111,181,.55);}
 .kv-txt-5{font-size:12.5px;font-weight:400;color:#ff6fb5;}
 .kv-txt-6{font-size:13.5px;font-weight:400;color:#fff;}
-#kvCta{position:relative;z-index:2;pointer-events:auto;margin-top:0;display:inline-flex;align-items:center;justify-content:center;width:clamp(190px,15vw,280px);aspect-ratio:668/170;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(16px,1.25vw,23px);letter-spacing:.02em;color:#fff;background:url(assets/images/cta.webp) center/100% 100% no-repeat;text-shadow:0 2px 6px rgba(0,0,0,.45);transition:transform .15s ease, filter .15s ease;}
-#kvCue{position:absolute;z-index:8;left:50%;transform:translateX(-50%);bottom:clamp(14px,3vh,32px);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
-.kv-txt-7{font-size:11px;letter-spacing:.28em;color:rgba(255,255,255,.8);}
-.kv-deco-5{display:block;width:1px;height:34px;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,0));animation:cueBob 2.2s ease-in-out infinite;}
 
 /* 미션 01 (일일 플레이) */
 #curtain{position:absolute;inset:0;z-index:2;pointer-events:none;-webkit-mask-image:linear-gradient(to bottom,transparent 100%,white 190%);mask-image:linear-gradient(to bottom,transparent 100%,white 190%);}
@@ -184,6 +212,7 @@ a.hdr-btn{color:#469CFF;}
 .m1-box-15{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;}
 .m1-txt-8{padding:8px 20px;font-size:clamp(14px,1.05vw,17px);font-weight:800;color:#241a24;background:#ffd84a;}
 .m1-desc-2{font-size:clamp(13px,.9vw,15px);line-height:1.6;color:#6b5866;word-break:keep-all;text-wrap:pretty;}
+.m1-notes{display:flex;flex-direction:column;gap:2px;min-width:0;}
 #smoke{position:absolute;inset:0;z-index:3;width:100%;height:100%;pointer-events:none;}
 
 /* 미션 02 (누적 플레이) */
@@ -452,16 +481,18 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
           <img class="kv-title" data-layer="title" src="assets/images/title-set2.webp" alt="단 3일, 역대급 배그 PC방 보상이 시작된다">
           <div class="kv-box-3" data-layer-mask="title"></div>
         </div>
-        <p id="kvSubCopy"><span class="kv-txt-2">PICA PC방에서 매일 플레이하고 최대 39,000M,</span><br id="kvSubBr"> 누적 플레이로 특별 PUBG 인게임 아이템까지!</p>
-        <p id="kvDatePc"><span class="kv-txt-3" aria-hidden="true"></span><span class="kv-txt-4" aria-hidden="true"></span>2026.11.6(금) ~ 2026.11.8(일) / 피카플레이 회원 대상</p>
+        <!-- PC: 서브카피 상자(2줄) → 그 아래 기간(서브카피 스타일) / 모바일: kvDatePc는 숨김, 기존대로 서브카피 + 기간 상자(kvDateMo) -->
+        <div id="kvDatePc">
+          <p class="kv-hl-line kv-txt-2">PICA PC방에서 매일 플레이하고</p>
+          <div class="kv-hl-band"><svg class="kv-hl-arrow" viewBox="0 -960 960 960" aria-hidden="true"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg><span class="kv-hl-pre">PICA 마일리지 최대</span><b class="kv-hl-num">39,000M</b><svg class="kv-hl-arrow kv-hl-arrow-r" viewBox="0 -960 960 960" aria-hidden="true"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg></div>
+          <p class="kv-hl-line">누적 플레이로 특별 PUBG 인게임 아이템까지!</p>
+        </div>
+        <p id="kvSubCopy"><span class="kv-sub-pc">2026.11.6(금) ~ 2026.11.8(일) / 피카플레이 회원 대상</span><span class="kv-sub-mo"><span class="kv-txt-2">PICA PC방에서 매일 플레이하고 최대 39,000M,</span><br id="kvSubBr"> 누적 플레이로 특별 PUBG 인게임 아이템까지!</span></p>
         <div id="kvDateMo"><div class="kv-box-4"><span class="kv-txt-5">이벤트 기간</span><span class="kv-txt-6">2026.11.6(금) ~ 11.8(일)</span></div><div class="kv-box-4"><span class="kv-txt-5">참여 대상</span><span class="kv-txt-6">피카플레이 회원</span></div></div>
-        <a id="kvCta" href="#" target="_blank">지금 플레이</a>
       </div>
 
-      <div id="kvCue">
-        <span class="kv-txt-7">SCROLL</span>
-        <i class="kv-deco-5"></i>
-      </div>
+      <!-- CTA: KV 하단 가운데, KV 안 모든 레이어보다 위 (z-index 최상위) -->
+      <div id="kvCtaWrap"><a id="kvCta" href="#" target="_blank">지금 플레이</a></div>
     </div>
 
     <!-- 미션 01 커튼 (스크롤에 따라 마스크로 드러남) -->
@@ -494,7 +525,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
               </div>
               <div class="m1-box-9">
                 <strong class="m1-strong-2">3,000M</strong>
-                <span class="m1-txt-3">마일리지 지급</span>
+                <span class="m1-txt-3">PICA 마일리지 지급</span>
               </div>
             </div>
             <img class="m1-step-arrow" data-step-arrow="" data-reveal="" src="assets/images/arrow.svg" alt="" aria-hidden="true">
@@ -507,7 +538,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
               </div>
               <div class="m1-box-11">
                 <strong class="m1-strong-4">+10,000M</strong>
-                <span class="m1-txt-4">마일리지 추가 지급</span>
+                <span class="m1-txt-4">PICA 마일리지 추가 지급</span>
               </div>
             </div>
           </div>
@@ -515,7 +546,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
             <div class="m1-tr-grid" data-tr-grid="">
               <div class="m1-tr-left" data-tr-left="">
                 <div class="m1-box-12">
-                  <span class="m1-txt-5"><span data-tr-slash="">// </span>TOTAL REWARD</span>
+                  <span class="m1-txt-5"><span data-tr-slash="">// </span>TOTAL PICA MILEAGE REWARD</span>
                   <div class="m1-box-13">
                     <span class="m1-txt-6">하루 최대</span>
                     <b class="m1-em-2">13,000M</b>
@@ -530,7 +561,10 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
           </div>
           <div class="m1-box-15">
             <span class="m1-txt-8">3일간 매일 다시 도전 가능!</span>
-            <p class="m1-desc-2">* 일일 플레이 미션은 매일 별도 선착순으로 운영되며, 당일 준비된 보상 소진 시 해당 일자의 지급이 종료됩니다.</p>
+            <div class="m1-notes">
+              <p class="m1-desc-2">* 일일 플레이 미션은 매일 별도 선착순으로 운영되며, 당일 준비된 보상 소진 시 해당 일자의 지급이 종료됩니다.</p>
+              <p class="m1-desc-2">* 피카 가맹 PC방에서 요금제 및 먹거리 결제 가능합니다.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -645,7 +679,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
         </div>
         <div class="howto-box-6">
           <img class="howto-img" src="assets/images/howto-2b.webp" alt="">
-          <div class="howto-box-7"><h3 class="howto-subtitle">플레이 미션 달성</h3><p class="howto-desc">배틀그라운드를 플레이하고 일일 / 누적 미션을 달성하세요.</p></div>
+          <div class="howto-box-7"><h3 class="howto-subtitle">플레이 미션 달성</h3><p class="howto-desc">배틀그라운드를 플레이하고 일일/누적 미션을 달성하세요.</p></div>
         </div>
       </div>
       <img class="m2-step-arrow" data-step-arrow="" data-reveal="" data-reveal-x="3" src="assets/images/arrow.svg" alt="" aria-hidden="true">
