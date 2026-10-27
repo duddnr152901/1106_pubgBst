@@ -167,8 +167,8 @@
   componentDidMount() {
     const cta = document.getElementById('kvCta');
     if (cta) {
-      cta.addEventListener('mouseenter', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 3px 2px rgba(0,0,0,.3)) brightness(1.12)'; cta.style.transform = 'translateY(-2px)'; });
-      cta.addEventListener('mouseleave', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 3px 2px rgba(0,0,0,.3))'; cta.style.transform = ''; });
+      cta.addEventListener('mouseenter', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.12)'; cta.style.transform = 'translateY(-2px)'; });
+      cta.addEventListener('mouseleave', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6))'; cta.style.transform = ''; });
     }
     const mm = q => window.matchMedia && window.matchMedia(q);
     this.reduce = mm('(prefers-reduced-motion: reduce)').matches;
@@ -185,6 +185,15 @@
     this.mq.addEventListener('change', this.onMq);
     this.mqTab.addEventListener('change', this.onMq);
     this.applyLayout();
+    // 모바일: 헤더 높이가 나중에 바뀌면(웹폰트 로드 후 공지 줄바꿈 변화 등) KV 위치를 다시 맞춤 → 헤더와 KV 사이 빈 띠 방지
+    if ('ResizeObserver' in window) {
+      this.topRO = new ResizeObserver(() => {
+        if (!this.isMobile) return;
+        const kv = document.getElementById('kv'), h = document.getElementById('top').offsetHeight || 80;
+        if (kv) { kv.style.marginTop = h + 'px'; kv.style.height = 'calc(100dvh - ' + h + 'px)'; }
+      });
+      this.topRO.observe(document.getElementById('top'));
+    }
 
     window.setPcRoomToggleState = on => {
       const b = document.getElementById('pcRoomToggle'), i = document.getElementById('pcRoomToggleImg');
@@ -203,6 +212,10 @@
     }));
 
     this.restoreWidget();
+    // 2분마다 자동 새로고침 (index·teaser 공통). 공유 모달이 열려 있으면 닫힐 때까지 10초씩 미룸
+    const RELOAD_MS = 2 * 60 * 1000;
+    const tryReload = () => { if (this.state.shareOpen) { this.reloadT = setTimeout(tryReload, 10000); return; } location.reload(); };
+    this.reloadT = setTimeout(tryReload, RELOAD_MS);
     this.initMist();
     this.initSparks();
     this.initReveal();
@@ -223,6 +236,8 @@
     if (this.io) this.io.disconnect();
     if (this.odoIO) this.odoIO.disconnect();
     if (this.visIO) this.visIO.disconnect();
+    if (this.topRO) this.topRO.disconnect();
+    clearTimeout(this.reloadT);
   }
 
   get isMobile() { return this.mq.matches; }
@@ -252,7 +267,7 @@
     set('kvBrandRow', { zoom: m ? '0.8' : '' });
     document.querySelectorAll('[data-mission-label]').forEach(el => { if (el.dataset.fs0 === undefined) el.dataset.fs0 = el.style.fontSize; el.style.fontSize = m ? '10.5px' : el.dataset.fs0; });
     document.querySelectorAll('[data-mission-title]').forEach(el => { if (el.dataset.fs0 === undefined) el.dataset.fs0 = el.style.fontSize; el.style.fontSize = m ? '34px' : el.dataset.fs0; });
-    set('kvCta', { filter: 'drop-shadow(0 3px 2px rgba(0,0,0,.3))' });
+    set('kvCta', { filter: 'drop-shadow(0 6px 10px rgba(0,0,0,.6))' });
     set('kvDatePc', { display: m ? 'none' : '' });
     set('kvDateMo', { display: m ? 'flex' : 'none' });
     set('kvSubCopy', { fontSize: m ? 'min(4.25vw,17px)' : '', letterSpacing: m ? '-0.02em' : '', lineHeight: m ? '1.5' : '' });
