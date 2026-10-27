@@ -80,6 +80,8 @@ a.hdr-btn{color:#469CFF;}
 #zoneSticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#f4d6e4;}
 #kv{position:absolute;inset:80px 0 0 0;z-index:1;overflow:hidden;background:#f4d6e4;}
 .kv-box{position:absolute;inset:0;}
+/* 패럴랙스·스크롤 줌 레이어: 래스터 배율 고정 → 스크롤 중 매 프레임 다시 그리지 않음(빈 분홍 화면 방지) */
+[data-kv-layer]{will-change:transform;}
 .kv-bg{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:center bottom;display:block;}
 #kvMoBg{display:none;position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;}
 #kvStage{position:absolute;left:50%;top:50%;width:max(100vw,calc((100vh - 80px) * 1.7778));height:max(56.25vw,calc(100vh - 80px));transform:translate(-50%,-50%);}

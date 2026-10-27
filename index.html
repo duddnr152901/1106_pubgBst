@@ -80,6 +80,8 @@ a.hdr-btn{color:#469CFF;}
 #zoneSticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#f4d6e4;}
 #kv{position:absolute;inset:80px 0 0 0;z-index:1;overflow:hidden;background:#f4d6e4;}
 .kv-box{position:absolute;inset:0;}
+/* 패럴랙스·스크롤 줌 레이어: 래스터 배율 고정 → 스크롤 중 매 프레임 다시 그리지 않음(빈 분홍 화면 방지) */
+[data-kv-layer]{will-change:transform;}
 .kv-bg{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:center bottom;display:block;}
 #kvMoBg{display:none;position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;}
 #kvStage{position:absolute;left:50%;top:50%;width:max(100vw,calc((100vh - 80px) * 1.7778));height:max(56.25vw,calc(100vh - 80px));transform:translate(-50%,-50%);}
@@ -156,17 +158,23 @@ a.hdr-btn{color:#469CFF;}
 @media (prefers-reduced-motion:reduce){.kv-hl-arrow{animation:none;}}
 .kv-hl-pre{font-size:clamp(18px,1.45vw,28px);color:#fff;}
 .kv-hl-num{font-size:clamp(22px,1.9vw,36px);background:linear-gradient(180deg,#ffd0e8 10%,#ff5aa8 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));padding-right:.08em;}
-#kvCta{position:relative;z-index:2;pointer-events:auto;margin-top:0;display:inline-flex;align-items:center;justify-content:center;width:clamp(230px,19vw,360px);aspect-ratio:668/170;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(19px,1.55vw,29px);letter-spacing:.02em;color:#fff;background:url(assets/images/cta.webp) center/100% 100% no-repeat;text-shadow:0 2px 6px rgba(0,0,0,.45);transition:transform .15s ease, filter .15s ease;}
-#kvCtaWrap{position:absolute;z-index:999;left:50%;transform:translateX(-50%);bottom:clamp(24px,5vh,56px);display:flex;justify-content:center;pointer-events:none;}
+#kvCta{position:relative;z-index:2;pointer-events:auto;margin-top:0;display:inline-flex;align-items:center;justify-content:center;width:clamp(230px,19vw,360px);aspect-ratio:800/211;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(19px,1.55vw,29px);letter-spacing:.02em;color:#fff;background:url(assets/images/cta-bottom-5455.webp) center/100% 100% no-repeat;text-shadow:0 2px 6px rgba(0,0,0,.45);transition:transform .15s ease, filter .15s ease;}
+#kvCtaWrap{position:absolute;z-index:999;left:50%;transform:translateX(-50%);bottom:clamp(22px,3.6vh,42px);display:flex;flex-direction:column;align-items:center;gap:clamp(18px,2.6vh,30px);pointer-events:none;}
+/* CTA 아래 스크롤 안내 (스크롤하면 main.js가 서서히 숨김) */
+#kvCue{display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;}
+.kv-txt-7{font-size:12px;font-weight:700;letter-spacing:.28em;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.9),0 1px 8px rgba(0,0,0,.7);}
+.kv-deco-5{display:block;width:clamp(22px,1.8vw,30px);height:auto;aspect-ratio:1;rotate:90deg;fill:#fff;filter:drop-shadow(0 0 3px rgba(0,0,0,.8));animation:cueArrowBob 2.2s ease-in-out infinite;}
+/* 회전된 아이콘이라 transform 대신 translate 속성으로 화면 기준 위아래 이동 */
+@keyframes cueArrowBob{0%,100%{translate:0 0;opacity:.45;}50%{translate:0 9px;opacity:1;}}
 #kvDateMo{position:relative;z-index:2;display:none;flex-direction:column;gap:5px;width:min(80vw,300px);}
 .kv-box-4{display:flex;justify-content:center;align-items:center;gap:10px;padding:8px 12px;background:rgba(26,18,25,.82);border:1px solid rgba(255,111,181,.55);}
 .kv-txt-5{font-size:12.5px;font-weight:400;color:#ff6fb5;}
 .kv-txt-6{font-size:13.5px;font-weight:400;color:#fff;}
 
 /* 미션 01 (일일 플레이) */
-#curtain{position:absolute;inset:0;z-index:2;pointer-events:none;-webkit-mask-image:linear-gradient(to bottom,transparent 100%,white 190%);mask-image:linear-gradient(to bottom,transparent 100%,white 190%);}
-#curtainInner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(80px + 2vh) clamp(20px,6vw,80px) 4vh;overflow:hidden;background:#fbe9f1;}
-#curtainBg{position:absolute;inset:-4%;z-index:0;transform:scale(1.1);}
+#curtain{position:absolute;left:0;right:0;top:0;height:190%;z-index:2;pointer-events:none;transform:translate3d(0,100vh,0);will-change:transform;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 47.37%);mask-image:linear-gradient(to bottom,transparent 0%,#000 47.37%);}
+#curtainInner{position:absolute;left:0;right:0;top:0;height:calc(100% / 1.9);will-change:transform;display:flex;align-items:center;justify-content:center;padding:calc(80px + 2vh) clamp(20px,6vw,80px) 4vh;overflow:hidden;background:#fbe9f1;}
+#curtainBg{position:absolute;inset:-4%;z-index:0;}
 .m1-bg{width:100%;height:100%;object-fit:cover;display:block;filter:blur(14px) saturate(1.1);}
 .m1-box{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(251,233,241,.82) 0%,rgba(251,233,241,.7) 55%,rgba(244,206,224,.85) 100%);}
 #kvSakura{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block;pointer-events:none;filter:blur(.6px);}
@@ -492,7 +500,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
       </div>
 
       <!-- CTA: KV 하단 가운데, KV 안 모든 레이어보다 위 (z-index 최상위) -->
-      <div id="kvCtaWrap"><a id="kvCta" href="#" target="_blank">지금 플레이</a></div>
+      <div id="kvCtaWrap"><a id="kvCta" href="#" target="_blank">지금 플레이</a><div id="kvCue" aria-hidden="true"><span class="kv-txt-7">SCROLL</span><svg class="kv-deco-5" viewBox="0 -960 960 960"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg></div></div>
     </div>
 
     <!-- 미션 01 커튼 (스크롤에 따라 마스크로 드러남) -->
