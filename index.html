@@ -158,7 +158,101 @@ a.hdr-btn{color:#469CFF;}
 @media (prefers-reduced-motion:reduce){.kv-hl-arrow{animation:none;}}
 .kv-hl-pre{font-size:clamp(18px,1.45vw,28px);color:#fff;}
 .kv-hl-num{font-size:clamp(22px,1.9vw,36px);background:linear-gradient(180deg,#ffd0e8 10%,#ff5aa8 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5));padding-right:.08em;}
-#kvCta{position:relative;z-index:2;pointer-events:auto;margin-top:0;display:inline-flex;align-items:center;justify-content:center;width:clamp(230px,19vw,360px);aspect-ratio:800/211;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(19px,1.55vw,29px);letter-spacing:.02em;color:#fff;background:url(assets/images/cta-bottom-5455.webp) center/100% 100% no-repeat;text-shadow:0 2px 6px rgba(0,0,0,.45);transition:transform .15s ease, filter .15s ease;}
+/* 이전 CTA (주석 처리)
+.kv-cta-btn{position:relative;z-index:2;isolation:isolate;pointer-events:auto;margin-top:0;display:inline-flex;align-items:center;justify-content:center;width:clamp(150px,15vw,300px);aspect-ratio:800/211;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(15px,1.3vw,25px);letter-spacing:.02em;color:#fff;background:url(assets/images/cta-bottom-5455.webp) center/100% 100% no-repeat;text-shadow:0 2px 6px rgba(0,0,0,.45);transition:transform .15s ease, filter .15s ease;}
+.kv-cta-row{display:flex;gap:clamp(10px,1.2vw,22px);}
+.kv-cta-b{filter:drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.2);}
+.kv-cta-btn::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .2s ease;-webkit-mask:url(assets/images/cta-bottom-5455.webp) center/100% 100% no-repeat;mask:url(assets/images/cta-bottom-5455.webp) center/100% 100% no-repeat;pointer-events:none;}
+.kv-cta-y::before{background:#fee500;}
+.kv-cta-b::before{background:#2f86e0;}
+.kv-cta-btn:hover::before,.kv-cta-btn:focus-visible::before{opacity:.94;}
+.kv-cta-btn{transition:transform .15s ease,filter .15s ease,color .2s ease,text-shadow .2s ease;}
+.kv-cta-y:hover,.kv-cta-y:focus-visible{color:#191919;text-shadow:none;}
+.kv-cta-b:hover{transform:translateY(-2px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.6));}
+*/
+/* CTA 2개: 평행사변형(좌우 사선 변에 색 보더), 호버 시 사선 바가 채워짐 — 왼쪽 노란색(카카오), 오른쪽 파란색 */
+/* CTA: 기본은 가운데 "지금 플레이" 하나 → 마우스를 올리면 양옆으로 펼쳐지며 사선으로 나뉨 (가운데 정렬 유지)
+   두 버튼 모두 전체 폭 박스에 겹쳐 두고 clip-path(보이는 영역)만 애니메이션 → 레이아웃 변화 없이 부드럽게. 오른쪽 칸은 왼쪽 칸 밑에서 밀려나옴 */
+.kv-btn-row{--c:clamp(10px,.8vw,16px);--bw:1px;--d:clamp(22px,1.8vw,36px);--ci:calc(var(--c) - .5px);--w:clamp(220px,17vw,320px);--W:calc(var(--w) * 2 - var(--d) / 2);position:relative;isolation:isolate;width:var(--W);padding:0;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5));}
+/* 호버 시작/끝에 레이어가 생겼다 사라지며 글자·판이 1px씩 튀는 현상 방지: 미리 GPU 레이어로 고정 */
+.kv-btn-row,.kv-btn-text{will-change:transform;}
+/* 테두리: 별도 도형 대신 보이는 칸들의 외곽을 그대로 따라가는 1px 그림자(위 filter) → 펼치는 중에도 끊기지 않음 */
+.kv-btn{appearance:none;border:none;background:none;color:#0f1923;cursor:pointer;position:relative;display:block;padding:0;pointer-events:auto;text-decoration:none;text-transform:uppercase;font-family:'Pretendard',sans-serif;font-weight:800;font-size:clamp(17px,1.45vw,27px);letter-spacing:.02em;}
+.kv-btn::before,.kv-btn::after{content:none;}
+/* 마우스는 잘린(보이는) 영역에서만 반응하도록 링크 자체는 통과시키고 안쪽 판만 받음 */
+.kv-btn{pointer-events:none;}
+.kv-btn-lg{pointer-events:auto;}
+.kv-btn:active,.kv-btn:focus{outline:none;}
+.kv-btn-y{z-index:2;}
+.kv-btn-b{position:absolute;inset:0;z-index:1;}
+.kv-btn-lg{position:relative;isolation:isolate;display:block;white-space:nowrap;padding:clamp(12px,1.1vw,20px) 0;text-align:center;color:#fff;overflow:hidden;transition:color .4s ease .1s;}
+.kv-btn-b .kv-btn-lg{height:100%;box-sizing:border-box;}
+/* 각 칸 바탕 판 */
+.kv-btn-lg::before{content:"";position:absolute;inset:0;z-index:-1;background:#1d171b;}
+/* 기본(펼치기 전) "지금 플레이"는 윗부분에만 흰 하이라이트 → 펼치면 서서히 사라짐 (--hl 숫자 애니메이션) */
+@property --hl{syntax:'<number>';inherits:false;initial-value:1;}
+.kv-btn-y .kv-btn-lg::before{--hl:1;background:linear-gradient(to bottom,rgba(255,255,255,calc(var(--hl) * .16)) 0%,rgba(255,255,255,0) 55%),#1d171b;transition:--hl .45s ease;}
+.kv-btn-row.is-exp .kv-btn-y .kv-btn-lg::before{--hl:0;}
+/* 버튼 안쪽에 "최대 39,000M" 상자와 같은 금속 스크래치 텍스처 */
+.kv-btn-lg::after{content:"";position:absolute;inset:0;z-index:-1;background:url(assets/images/kv/box-texture.webp) center/cover no-repeat;mix-blend-mode:hard-light;opacity:.2;pointer-events:none;}
+/* 오른쪽(스팀) 칸은 스팀 계열 어두운 파란색 */
+.kv-btn-b .kv-btn-lg::before{background:linear-gradient(90deg,#0e1622 0%,#16283a 100%);}
+.kv-btn-sl{display:block;position:absolute;top:0;bottom:-1px;left:-8px;width:0;transform:skew(-15deg);transition:width .5s cubic-bezier(.65,0,.25,1);}
+.kv-btn-y .kv-btn-sl{background:#ffe300;}
+.kv-btn-b .kv-btn-sl{background:linear-gradient(100deg,#3576c9 0%,#1e4d96 100%);left:calc(50% - var(--d));}
+.kv-btn-row.is-open .kv-btn:hover .kv-btn-sl,.kv-btn:focus-visible .kv-btn-sl{width:calc(100% + 15px);}
+/* 보이는 영역: clip-path를 직접 transition하면 크롬이 GPU로 넘겨 끝나는 순간 1프레임 기본 모양으로 튀는 버그가 있음
+   → 진행값 --p(0 기본 ~ 1 펼침)만 transition하고 각 꼭짓점을 --p로 계산 (메인 스레드에서 그려져 튐 없음) */
+@property --p{syntax:'<number>';inherits:true;initial-value:0;}
+.kv-btn-row{--p:0;--q:calc(1 - var(--p));--xl:calc((50% - var(--w) / 2) * var(--q));--xr:calc(50% + var(--w) / 2 + (50% - var(--w) / 2) * var(--p));transition:--p .45s cubic-bezier(.65,0,.25,1);}
+.kv-btn-row.is-exp{--p:1;}
+@media (hover:none){.kv-btn-row{--p:1;}}
+.kv-btn-y .kv-btn-lg{clip-path:polygon(calc(var(--xl) + var(--ci)) 0,calc(50% + var(--d) / 2 + (var(--w) / 2 - var(--ci) - var(--d) / 2) * var(--q)) 0,calc(50% + var(--d) / 2 + (var(--w) / 2 - var(--d) / 2) * var(--q)) calc(var(--ci) * var(--q)),calc(50% - var(--d) / 2 + (var(--w) / 2 + var(--d) / 2) * var(--q)) calc(100% - var(--ci) * var(--q)),calc(50% - var(--d) / 2 + (var(--w) / 2 - var(--ci) + var(--d) / 2) * var(--q)) 100%,calc(var(--xl) + var(--ci)) 100%,var(--xl) calc(100% - var(--ci)),var(--xl) var(--ci));}
+.kv-btn-b .kv-btn-lg{clip-path:polygon(calc(50% + var(--d) / 2 - 2px) 0,calc(var(--xr) - var(--ci)) 0,var(--xr) var(--ci),var(--xr) calc(100% - var(--ci)),calc(var(--xr) - var(--ci)) 100%,calc(50% - var(--d) / 2 - 2px) 100%);}
+/* 글자: 기본은 가운데, 펼치면 각 칸 가운데로 */
+.kv-btn-text{position:relative;display:inline-block;transition:translate .45s cubic-bezier(.65,0,.25,1);}
+.kv-btn-row.is-exp .kv-btn-y .kv-btn-text{translate:calc(var(--W) / -4 + var(--d) / 8) 0;}
+.kv-btn-b .kv-btn-text{translate:calc(var(--W) / 4 - var(--d) / 8) 0;opacity:0;transition:opacity .25s ease;}
+.kv-btn-row.is-exp .kv-btn-b .kv-btn-text{opacity:1;transition-delay:.25s;}
+@media (hover:none){.kv-btn-b .kv-btn-text{opacity:1;}.kv-btn-row .kv-btn-y .kv-btn-text{translate:calc(var(--W) / -4 + var(--d) / 8) 0;}}
+/* (가운데 사선: 왼쪽 링크는 칸 사선과 정확히 같게(흰 보더 안 보이게), 오른쪽 칸·링크는 2px 왼쪽 칸 밑으로 넣어 두 사선 사이로 배경이 비치는 틈 제거)
+   보더: 각 링크(.kv-btn)를 보이는 칸보다 1px 큰 같은 모양으로 잘라 그 위에 칸을 얹음 → 바깥 1px만 보더로 보임(가운데 사선은 확장 안 해 보더 없음)
+   보더 위로 메인 타이틀과 같은 빛 줄기(kvTitleSweep)가 지나감 */
+.kv-btn::before,.kv-btn::after{content:"";position:absolute;z-index:-1;pointer-events:none;}
+.kv-btn::before{inset:-2px;background:rgba(255,255,255,.28);}
+.kv-btn::after{top:-2px;bottom:-2px;left:0;width:250%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%);animation:kvTitleSweep 3s ease-in-out infinite;}
+.kv-btn-y{clip-path:polygon(calc(var(--xl) + var(--ci)) -1px,calc(50% + var(--d) / 2 + (var(--w) / 2 - var(--ci) - var(--d) / 2) * var(--q)) -1px,calc(50% + var(--d) / 2 + (var(--w) / 2 - var(--d) / 2 + 1px) * var(--q)) calc(var(--ci) * var(--q) - 1px * var(--p)),calc((50% + var(--w) / 2 + 1px) * var(--q) + (50% + var(--d) / 2) * var(--p)) calc(var(--ci) * var(--q)),calc((50% + var(--w) / 2 + 1px) * var(--q) + (50% - var(--d) / 2) * var(--p)) calc(100% - var(--ci) * var(--q)),calc(50% - var(--d) / 2 + (var(--w) / 2 + var(--d) / 2 + 1px) * var(--q)) calc(100% - var(--ci) * var(--q) + 1px * var(--p)),calc(50% - var(--d) / 2 + (var(--w) / 2 - var(--ci) + var(--d) / 2) * var(--q)) calc(100% + 1px),calc(var(--xl) + var(--ci)) calc(100% + 1px),calc(var(--xl) - 1px) calc(100% - var(--ci)),calc(var(--xl) - 1px) var(--ci));}
+.kv-btn-b{clip-path:polygon(calc(50% + var(--d) / 2) -1px,calc(var(--xr) - var(--ci)) -1px,calc(var(--xr) + 1px) var(--ci),calc(var(--xr) + 1px) calc(100% - var(--ci)),calc(var(--xr) - var(--ci)) calc(100% + 1px),calc(50% - var(--d) / 2) calc(100% + 1px),calc(50% - var(--d) / 2 - 2px) 100%,calc(50% + var(--d) / 2 - 2px) 0);}
+/* 왼쪽 글자: 기본 "지금 플레이" → 펼치면 "KAKAO PUBG"로 교차 전환 */
+.kv-btn-y .kv-btn-text{display:inline-grid;}
+.kv-t-def,.kv-t-hov{grid-area:1/1;transition:opacity .25s ease;}
+.kv-t-hov{opacity:0;}
+.kv-btn-row.is-exp .kv-t-def{opacity:0;}
+.kv-btn-row.is-exp .kv-t-hov{opacity:1;}
+@media (hover:none){.kv-t-def{opacity:0;}.kv-t-hov{opacity:1;}}
+/* 펼친 뒤 호버한 쪽 글자 옆에 핑크 화살표(arrow.svg 모양) — 글자 가운데 정렬엔 영향 없게 absolute */
+.kv-btn-arrow{position:absolute;left:100%;top:50%;width:.42em;height:.84em;margin-left:.45em;fill:#fff;opacity:0;translate:-.3em -50%;transition:opacity .35s ease,translate .35s ease;pointer-events:none;}
+.kv-btn-row.is-open .kv-btn:hover .kv-btn-arrow,.kv-btn:focus-visible .kv-btn-arrow{opacity:1;translate:0 -50%;}
+.kv-btn-y .kv-btn-arrow{fill:#1e1e1e;}
+/* 노란 바탕에선 흰 글씨가 안 보여 어두운 글씨로 */
+.kv-btn-row.is-open .kv-btn-y:hover .kv-btn-lg,.kv-btn-y:focus-visible .kv-btn-lg{color:#333;}
+/* 펼친 상태에선 두 칸 글자 모두 기본 50% → 펼침이 끝난 뒤 호버한 쪽만 선명하게 */
+.kv-btn-row.is-exp .kv-btn-lg{color:rgba(255,255,255,.5);}
+.kv-btn-row.is-open .kv-btn-b:hover .kv-btn-lg{color:#fff;}
+/* 모바일: 펼침 없이 처음부터 버튼 2개를 위아래로 (카카오 위, 스팀 아래) — 각자 8각형 + 바깥 1px 보더 */
+@media (max-width:768px){
+.kv-btn-row{--p:0;width:min(76vw,300px);display:flex;flex-direction:column;gap:10px;}
+.kv-btn-b{position:relative;inset:auto;}
+.kv-btn-b .kv-btn-lg{height:auto;}
+.kv-btn-row .kv-btn-y,.kv-btn-row .kv-btn-b{clip-path:polygon(var(--ci) -1px,calc(100% - var(--ci)) -1px,calc(100% + 1px) var(--ci),calc(100% + 1px) calc(100% - var(--ci)),calc(100% - var(--ci)) calc(100% + 1px),var(--ci) calc(100% + 1px),-1px calc(100% - var(--ci)),-1px var(--ci));}
+.kv-btn-row .kv-btn-y .kv-btn-lg,.kv-btn-row .kv-btn-b .kv-btn-lg{clip-path:polygon(var(--ci) 0,calc(100% - var(--ci)) 0,100% var(--ci),100% calc(100% - var(--ci)),calc(100% - var(--ci)) 100%,var(--ci) 100%,0 calc(100% - var(--ci)),0 var(--ci));color:#fff;}
+.kv-btn-row .kv-btn-text,.kv-btn-row .kv-btn-y .kv-btn-text{translate:none;}
+.kv-btn-b .kv-btn-text{opacity:1;}
+.kv-t-def{opacity:0;}.kv-t-hov{opacity:1;}
+.kv-btn-sl{display:none;}
+.kv-btn-y .kv-btn-lg::before{--hl:0;}
+.kv-btn-row .kv-btn-arrow,.kv-btn-row .kv-btn-y .kv-btn-arrow{opacity:1;translate:0 -50%;fill:#fff;}
+}
 #kvCtaWrap{position:absolute;z-index:999;left:50%;transform:translateX(-50%);bottom:clamp(22px,3.6vh,42px);display:flex;flex-direction:column;align-items:center;gap:clamp(18px,2.6vh,30px);pointer-events:none;}
 /* CTA 아래 스크롤 안내 (스크롤하면 main.js가 서서히 숨김) */
 #kvCue{display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;}
@@ -206,6 +300,9 @@ a.hdr-btn{color:#469CFF;}
 .m1-box-11{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,10px);padding:clamp(18px,3vh,34px) 20px;text-align:center;background:url(assets/images/grunge-light2.webp) 0 0/320px repeat;}
 .m1-strong-4{font-family:'Pretendard',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(40px,4.2vw,68px);line-height:1;color:#ff6fb5;background:linear-gradient(180deg,#ff8cc6 30%,#ffcde5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 3px rgba(0,0,0,.7));}
 .m1-txt-4{font-size:clamp(14px,1vw,16px);font-weight:700;color:#e5d6e0;}
+/* 모바일에서만 "(매일 선착순 …)"을 다음 줄로 */
+.m1-br-mo{display:none;}
+@media (max-width:768px){.m1-br-mo{display:inline;}}
 #totalReward{padding:1px;background:#e8288c;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-grid{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:stretch;background:radial-gradient(circle,rgba(255,255,255,.06) 0.9px,transparent 1.3px) 0 0/4px 4px,linear-gradient(180deg,#3a1730 0%,#2e1226 100%);clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-left{min-width:0;background:#ff4fa3;clip-path:polygon(0 0,100% 0,calc(100% - 70px) 100%,0 100%);}
@@ -500,7 +597,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
       </div>
 
       <!-- CTA: KV 하단 가운데, KV 안 모든 레이어보다 위 (z-index 최상위) -->
-      <div id="kvCtaWrap"><a id="kvCta" href="#" target="_blank">지금 플레이</a><div id="kvCue" aria-hidden="true"><span class="kv-txt-7">SCROLL</span><svg class="kv-deco-5" viewBox="0 -960 960 960"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg></div></div>
+      <div id="kvCtaWrap"><!-- 이전 CTA (주석 처리) <div class="kv-cta-row"><a id="kvCta" class="kv-cta-btn kv-cta-y" href="#" target="_blank">지금 플레이</a><a class="kv-cta-btn kv-cta-b" href="https://picaplay.com/pcbang/main.do" target="_blank" rel="noopener noreferrer">가맹 PC방 찾기</a></div> --><div class="kv-btn-row"><a class="kv-btn kv-btn-y" href="https://pubg.kakaogames.com/pubg/index" target="_blank" rel="noopener noreferrer"><span class="kv-btn-lg"><span class="kv-btn-sl"></span><span class="kv-btn-text"><span class="kv-t-def">지금 플레이</span><span class="kv-t-hov">카카오 PUBG</span><svg class="kv-btn-arrow" viewBox="0 0 48.72 97.44" aria-hidden="true"><polygon points="0 0 0 25.28 23.44 48.72 0 72.16 0 97.44 48.72 48.72 0 0"/><polygon points="0 36.27 12.45 48.72 0 61.17 0 36.27"/></svg></span></span></a><a class="kv-btn kv-btn-b" href="https://store.steampowered.com/app/578080/PUBG_BATTLEGROUNDS/" target="_blank" rel="noopener noreferrer"><span class="kv-btn-lg"><span class="kv-btn-sl"></span><span class="kv-btn-text">스팀 PUBG<svg class="kv-btn-arrow" viewBox="0 0 48.72 97.44" aria-hidden="true"><polygon points="0 0 0 25.28 23.44 48.72 0 72.16 0 97.44 48.72 48.72 0 0"/><polygon points="0 36.27 12.45 48.72 0 61.17 0 36.27"/></svg></span></span></a></div><div id="kvCue" aria-hidden="true"><span class="kv-txt-7">SCROLL</span><svg class="kv-deco-5" viewBox="0 -960 960 960"><path d="m242-200 200-280-200-280h98l200 280-200 280h-98Zm238 0 200-280-200-280h98l200 280-200 280h-98Z"/></svg></div></div>
     </div>
 
     <!-- 미션 01 커튼 (스크롤에 따라 마스크로 드러남) -->
@@ -533,7 +630,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
               </div>
               <div class="m1-box-9">
                 <strong class="m1-strong-2">3,000M</strong>
-                <span class="m1-txt-3">PICA 마일리지 지급</span>
+                <span class="m1-txt-3">PICA 마일리지 지급<br class="m1-br-mo"> (매일 선착순 8,000명)</span>
               </div>
             </div>
             <img class="m1-step-arrow" data-step-arrow="" data-reveal="" src="assets/images/arrow.svg" alt="" aria-hidden="true">
@@ -546,7 +643,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
               </div>
               <div class="m1-box-11">
                 <strong class="m1-strong-4">+10,000M</strong>
-                <span class="m1-txt-4">PICA 마일리지 추가 지급</span>
+                <span class="m1-txt-4">PICA 마일리지 추가 지급<br class="m1-br-mo"> (매일 선착순 3,300명)</span>
               </div>
             </div>
           </div>
@@ -616,7 +713,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
           </div>
           <div class="m2-box-8">
             <strong class="m2-strong">지스카 점프수트 (파스텔 블루)</strong>
-            <span class="m2-txt-4">지급</span>
+            <span class="m2-txt-4">선착순 15,000명 지급</span>
           </div>
         </div>
       </div>
@@ -640,7 +737,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
           </div>
           <div class="m2-box-8">
             <strong class="m2-strong">1UP - SLR</strong>
-            <span class="m2-txt-6">추가 지급</span>
+            <span class="m2-txt-6">선착순 10,000명 추가 지급</span>
           </div>
         </div>
       </div>
