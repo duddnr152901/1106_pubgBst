@@ -167,8 +167,25 @@
   componentDidMount() {
     const cta = document.getElementById('kvCta');
     if (cta) {
-      cta.addEventListener('mouseenter', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.35)'; cta.style.transform = 'translateY(-2px)'; });
+      cta.addEventListener('mouseenter', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6))'; cta.style.transform = 'translateY(-2px)'; });
       cta.addEventListener('mouseleave', () => { if (this.isMobile) return; cta.style.filter = 'drop-shadow(0 6px 10px rgba(0,0,0,.6)) brightness(1.2)'; cta.style.transform = ''; });
+    }
+    // CTA: 처음 클릭하면 펼치기만(링크 이동 X) → 펼친 뒤 각 칸 클릭 시 이동. 마우스가 벗어나거나 바깥 클릭/Esc면 접힘
+    // 펼침(.45s)이 끝난 뒤에만 좌/우 호버 채움 활성화(is-open)
+    const btnRow = document.querySelector('.kv-btn-row');
+    if (btnRow) {
+      let openT;
+      const expand = () => { if (btnRow.classList.contains('is-exp')) return; btnRow.classList.add('is-exp'); clearTimeout(openT); openT = setTimeout(() => btnRow.classList.add('is-open'), 450); };
+      const collapse = () => { clearTimeout(openT); btnRow.classList.remove('is-exp', 'is-open'); };
+      btnRow.addEventListener('click', e => {
+        const a = e.target.closest('a'); if (!a) return;
+        if (!btnRow.classList.contains('is-exp') && !matchMedia('(hover:none), (max-width: 768px)').matches) { e.preventDefault(); expand(); }
+        if (e.detail > 0) a.blur();
+      });
+      btnRow.addEventListener('mouseleave', collapse);
+      btnRow.addEventListener('focusin', e => { if (e.target.matches(':focus-visible')) expand(); });
+      document.addEventListener('click', e => { if (!btnRow.contains(e.target)) collapse(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') collapse(); });
     }
     const mm = q => window.matchMedia && window.matchMedia(q);
     this.reduce = mm('(prefers-reduced-motion: reduce)').matches;
