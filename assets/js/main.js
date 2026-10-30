@@ -36,7 +36,6 @@
     ['flyer', '날라다니는애', 'assets/images/kv/flyer.webp'], ['supply', '보급상자', 'assets/images/kv/supply.webp'],
     ['aura-big', '큰 핑크오라', 'assets/images/kv/aura-big.webp'], ['aura-rise', '솟구치는 핑크오라', 'assets/images/kv/aura-rise.webp'], ['aura', '핑크오라', 'assets/images/kv/aura.webp'],
     ['sun-glow', '노란 빛 (효과)', ''], ['explosion', '폭발', 'assets/images/kv/explosion.webp'], ['dust', '먼지', 'assets/images/kv/dust.webp'],
-    ['balloon-ll', '맨왼쪽 풍선', 'assets/images/kv/balloon-ll.webp'], ['balloon-l', '왼쪽 풍선', 'assets/images/kv/balloon-l.webp'], ['balloon-r', '오른쪽 풍선', 'assets/images/kv/balloon-r.webp'],
     ['flower-l-blur', '왼쪽 맨앞 블러꽃', 'assets/images/kv/flower-l-blur.webp'], ['flower-l2', '왼쪽꽃2', 'assets/images/kv/flower-l2.webp'], ['flower-r-blur', '오른쪽 블러꽃', 'assets/images/kv/flower-r-blur.webp'],
     ['item-slr', '아이템: 1UP - SLR', 'assets/images/item-slr.webp'], ['item-jumpsuit', '아이템: 지스카 점프수트', 'assets/images/item-jumpsuit.webp']
   ];
@@ -158,8 +157,8 @@
 
   // 공유하기 설정 (카카오톡·트위터·네이버 공유 문구/썸네일). [BACKEND] 배포 도메인이 바뀌면 카카오 앱에 사이트 도메인 등록 필요
   SHARE_CONFIG = {
-    title: '배틀그라운드 X 피카플레이 PC방 부스팅 이벤트',
-    description: 'PICA PC방에서 단 3일! 배틀그라운드를 플레이하고 일일·누적 미션 보상을 모두 획득하세요!',
+    title: 'PUBG: 배틀그라운드 X 피카플레이 PC방 부스팅 이벤트',
+    description: 'PICA PC방에서 단 3일! PUBG: 배틀그라운드를 플레이하고 일일·누적 미션 보상을 모두 획득하세요!',
     kakaoKey: 'd1c0c39f4dbac0062bf36527a3021357', // ics.mediaweb.co.kr용 JavaScript 키
     ogImage: 'https://ics.mediaweb.co.kr/_event/20261106_pubgBst/assets/Thumbnail_1200x630.jpg'
   };
@@ -233,7 +232,7 @@
     const RELOAD_MS = 2 * 60 * 1000;
     const tryReload = () => { if (this.state.shareOpen) { this.reloadT = setTimeout(tryReload, 10000); return; } location.reload(); };
     this.reloadT = setTimeout(tryReload, RELOAD_MS);
-    this.initMist();
+    // this.initMist(); // KV 하단 핑크 안개 — 꺼둠 (다시 켜려면 주석 해제 + 아래 kvMist visibility 복구)
     this.initSparks();
     this.initReveal();
     this.initOdometer();
@@ -292,7 +291,7 @@
     set('kvSubBr', { display: m ? 'inline' : 'none' });
     set('kvMainTitle', { marginTop: m ? '10px' : '', marginBottom: m ? '6px' : '' });
     set('kvMoBg', { display: m ? 'block' : 'none', cursor: (this.props.showWidget ?? true) ? 'pointer' : 'default' });
-    set('kvMist', { visibility: m ? 'hidden' : 'visible' });
+    set('kvMist', { visibility: 'hidden' }); // 안개 꺼둠 (원래: m ? 'hidden' : 'visible')
     document.querySelectorAll('[data-layer="sun-glow"],[data-layer="logo"]').forEach(el => { el.style.visibility = m ? 'hidden' : 'visible'; });
     document.querySelectorAll('[data-step-arrow]').forEach(el => { if (el.dataset.h0 === undefined) el.dataset.h0 = el.style.height; Object.assign(el.style, m ? { rotate: '90deg', height: '34px', margin: '-8px 0' } : { rotate: '', height: el.dataset.h0, margin: '' }); if (el.parentElement) { el.parentElement.style.flexDirection = m ? 'column' : ''; Array.from(el.parentElement.children).forEach(c => { if (c !== el && !c.hasAttribute('data-step-arrow')) { if (c.dataset.f0 === undefined) c.dataset.f0 = c.style.flex; c.style.flex = m ? '0 0 auto' : c.dataset.f0; } }); } });
     document.querySelectorAll('[data-layer="supply-drop"],[data-layer="m2-bike"]').forEach(el => { el.style.display = m ? 'none' : ''; });
@@ -451,6 +450,9 @@
     // 마우스 대신 자동 좌우 패럴랙스 (레이어별 depth 비율은 동일하게 유지)
     const AUTO_PERIOD = 12; // 한 번 왕복(초)
     const AUTO_Y = 0.3;     // 타원 궤도의 위아래 비율 (좌우 대비, 0이면 좌우만)
+    const AUTO_DRIFT = false; // KV 레이어 자동 흔들림(계속 움직이는 패럴랙스) — 꺼둠. true면 전체 레이어 다시 켜짐
+    // 꺼둔 상태에서도 맨 앞 차 레이어(차·헤드라이트·불꽃)만은 계속 흔들림
+    const driftLayers = AUTO_DRIFT ? layers : layers.filter(l => l.el.querySelector('.kv-car'));
     const renderSmoke = this.initSmoke();
     let lastP = -1, lastH = -1;
     const sticky = document.getElementById('zoneSticky'), curtainInner = document.getElementById('curtainInner');
@@ -473,12 +475,12 @@
         if (this.odoMask) this.odoMask(c, BAND);
         lastP = p;
       }
-      if (!this.reduce && this.kvShown()) {
+      if (driftLayers.length && !this.reduce && this.kvShown()) {
         tx = Math.sin(t * Math.PI * 2 / AUTO_PERIOD);
         ty = Math.cos(t * Math.PI * 2 / AUTO_PERIOD) * AUTO_Y;
         kvMx += (tx * 3 - kvMx) * 0.08; kvMy += (ty * 3 - kvMy) * 0.08;
         const panY = 0;
-        layers.forEach(l => {
+        driftLayers.forEach(l => {
           l.el.style.transform = 'translate3d(' + (kvMx * l.depth).toFixed(2) + 'px,' + (kvMy * l.depth).toFixed(2) + 'px,0) scale(' + (1 + SCROLL_ZOOM * p).toFixed(4) + ') translateY(' + (panY * SCROLL_PAN).toFixed(2) + '%)';
         });
       }
