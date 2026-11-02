@@ -178,7 +178,7 @@
       const collapse = () => { clearTimeout(openT); btnRow.classList.remove('is-exp', 'is-open'); };
       btnRow.addEventListener('click', e => {
         const a = e.target.closest('a'); if (!a) return;
-        if (!btnRow.classList.contains('is-exp') && !matchMedia('(hover:none), (max-width: 768px)').matches) { e.preventDefault(); expand(); }
+        if (!btnRow.classList.contains('is-exp') && !matchMedia('(hover:none), (max-width: 1024px)').matches) { e.preventDefault(); expand(); }
         if (e.detail > 0) a.blur();
       });
       btnRow.addEventListener('mouseleave', collapse);
@@ -188,7 +188,7 @@
     }
     const mm = q => window.matchMedia && window.matchMedia(q);
     this.reduce = mm('(prefers-reduced-motion: reduce)').matches;
-    this.mq = mm('(max-width: 768px)');
+    this.mq = mm('(max-width: 1024px)');
     // 화면에 보이는 구간만 애니메이션을 돌리기 위한 가시성 추적 (안 보이는 동안 GPU 부하 제거)
     this.vis = {};
     if ('IntersectionObserver' in window) {
@@ -206,7 +206,7 @@
       this.topRO = new ResizeObserver(() => {
         if (!this.isMobile) return;
         const kv = document.getElementById('kv'), h = document.getElementById('top').offsetHeight || 80;
-        if (kv) { kv.style.marginTop = h + 'px'; kv.style.height = 'calc(100dvh - ' + h + 'px)'; }
+        if (kv) { kv.style.marginTop = h + 'px'; kv.style.height = 'calc(100svh - ' + h + 'px)'; }
       });
       this.topRO.observe(document.getElementById('top'));
     }
@@ -280,7 +280,7 @@
     // 커튼(미션 01)이 없는 페이지(사전 홍보 teaser.html)는 스크롤 전환 구간 없이 KV 한 화면
     set('zone', { height: m ? 'auto' : $('curtain') ? '210vh' : '100vh' });
     set('zoneSticky', { position: m ? 'relative' : 'sticky', height: m ? 'auto' : '100vh', overflow: m ? 'visible' : 'hidden' });
-    set('kv', m ? { position: 'relative', inset: 'auto', marginTop: (document.getElementById('top').offsetHeight || 80) + 'px', height: 'calc(100dvh - ' + (document.getElementById('top').offsetHeight || 80) + 'px)', minHeight: '0' } : { position: 'absolute', inset: '80px 0 0 0', marginTop: '0', height: '', minHeight: '' });
+    set('kv', m ? { position: 'relative', inset: 'auto', marginTop: (document.getElementById('top').offsetHeight || 80) + 'px', height: 'calc(100svh - ' + (document.getElementById('top').offsetHeight || 80) + 'px)', minHeight: '0' } : { position: 'absolute', inset: '80px 0 0 0', marginTop: '0', height: '', minHeight: '' });
     set('kvBrandRow', { zoom: m ? '0.8' : '' });
     document.querySelectorAll('[data-mission-label]').forEach(el => { if (el.dataset.fs0 === undefined) el.dataset.fs0 = el.style.fontSize; el.style.fontSize = m ? '10.5px' : el.dataset.fs0; });
     document.querySelectorAll('[data-mission-title]').forEach(el => { if (el.dataset.fs0 === undefined) el.dataset.fs0 = el.style.fontSize; el.style.fontSize = m ? '34px' : el.dataset.fs0; });
@@ -779,7 +779,7 @@ void main(){
       mWidgetArrow: this.state.mWidgetOpen ? '▲' : '▼',
       toggleMWidget: () => this.setState(s => ({ mWidgetOpen: !s.mWidgetOpen, widgetOpen: false })),
       resetMobile: this.resetMobile,
-      mNote: this.mq && this.isMobile ? '모바일 화면입니다. 여기서 바꾼 값이 바로 적용돼요.' : 'PC 화면에서는 값만 저장되고 화면엔 안 보여요. 모바일 미리보기(768px 이하)에서 확인하세요.',
+      mNote: this.mq && this.isMobile ? '모바일 화면입니다. 여기서 바꾼 값이 바로 적용돼요.' : 'PC 화면에서는 값만 저장되고 화면엔 안 보여요. 모바일 미리보기(1024px 이하)에서 확인하세요.',
       mNoteColor: this.mq && this.isMobile ? '#6fe3e8' : '#ffb35c',
       mLayerRows: this.LAYERS.filter(([k]) => k.indexOf('item-') !== 0).map(([k, label, src]) => {
         const o = this.state.overrides[k], p = (this.state.posM || {})[k] || {}, h = (this.state.hiddenM || {})[k];
