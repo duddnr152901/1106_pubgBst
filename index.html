@@ -298,24 +298,7 @@ a.hdr-btn{color:#469CFF;}
 .m1-box-11{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,10px);padding:clamp(18px,3vh,34px) 20px;text-align:center;background:url(assets/images/grunge-light2.webp) 0 0/320px repeat,linear-gradient(180deg,#5a1f47 0%,#3f1832 100%);box-shadow:0 14px 40px rgba(120,20,70,.14);}
 .m1-strong-4{font-family:'Pretendard',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(40px,4.2vw,68px);line-height:1;color:#ff6fb5;background:linear-gradient(180deg,#ff8cc6 30%,#ffcde5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 3px rgba(0,0,0,.7));}
 .m1-txt-4{font-size:clamp(14px,1vw,16px);font-weight:700;color:#e5d6e0;}
-/* STEP 카드 아래 일차별 선착순 인원 (3칸) — 카드와 같은 사선 무늬 + 모서리 컷 + 일차 태그 */
-.m1-days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,.6vw,10px);margin-top:clamp(8px,1.2vh,14px);filter:drop-shadow(0 8px 16px rgba(120,20,70,.14));}
-.m1-day{--ac:#e8288c;--bd:linear-gradient(135deg,rgba(232,40,140,.75),rgba(232,40,140,.5));--fill:linear-gradient(180deg,#fff 0%,#fdf0f6 100%);--glow:rgba(232,40,140,.1);position:relative;isolation:isolate;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:clamp(10px,1.3vh,14px) clamp(10px,.7vw,12px) clamp(10px,1.3vh,14px) clamp(8px,.55vw,10px);white-space:nowrap;
-  background:var(--bd);}
-/* 1px 안쪽 면 (바깥 그라데이션이 테두리로 보임) + 오른쪽 사선 광택 */
-.m1-day::after{content:"";position:absolute;inset:1px;z-index:-1;box-shadow:inset 0 0 16px var(--glow);
-  background:linear-gradient(118deg,transparent 0 64%,rgba(255,255,255,.55) 64% 70%,transparent 70% 76%,rgba(255,255,255,.35) 76% 86%,transparent 86%),var(--fill);}
-.m1-day-d{flex:none;padding:.35em .5em;font-size:clamp(11px,.75vw,12px);font-weight:800;letter-spacing:.02em;line-height:1;color:#ff6fb5;background:#241a24;box-shadow:inset 0 0 0 1px rgba(255,111,181,.55);}
-.m1-day-h{display:flex;align-items:center;gap:5px;}
-.m1-day-l{margin-left:auto;margin-right:-2px;font-size:clamp(11px,.75vw,12px);font-weight:600;color:#5b4a56;}
-.m1-day-n{font-family:'Pretendard',sans-serif;font-size:clamp(17px,1.35vw,18px);font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--ac);}
-.m1-day-n small{margin-left:.1em;font-size:.6em;font-weight:700;color:#5b4a56;}
-.m1-box-10 .m1-day{--ac:#ff8cc6;--bd:linear-gradient(135deg,rgba(255,140,198,.9),rgba(255,140,198,.6));--fill:linear-gradient(180deg,#3a1630 0%,#24101e 100%);--glow:rgba(255,60,160,.38);}
-.m1-box-10 .m1-day::after{background:linear-gradient(118deg,transparent 0 64%,rgba(255,255,255,.05) 64% 70%,transparent 70% 76%,rgba(255,255,255,.08) 76% 86%,transparent 86%),var(--fill);}
-.m1-box-10 .m1-day-d{color:#fff;background:rgba(255,140,198,.12);box-shadow:inset 0 0 0 1px rgba(255,140,198,.8);}
-.m1-box-10 .m1-day-l,.m1-box-10 .m1-day-n small{color:#e5d6e0;}
-/* 모바일: 칸이 좁아 태그 · 선착순 · 인원 세로로 */
-@media (max-width:1024px){.m1-day{flex-direction:column;justify-content:center;gap:6px;padding:10px 4px;}.m1-day-l{margin:0 0 -3px;}.m1-day-n{font-size:17px;}}
+.m1-fcfs{margin-top:clamp(2px,.4vh,6px);padding:.38em .9em .24em;font-size:clamp(15px,1.15vw,19px);font-weight:800;line-height:1.2;color:#fff;background:#e8288c;}
 #totalReward{padding:1px;background:#e8288c;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-grid{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:stretch;background:radial-gradient(circle,rgba(255,255,255,.06) 0.9px,transparent 1.3px) 0 0/4px 4px,linear-gradient(180deg,#3a1730 0%,#2e1226 100%);clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-left{min-width:0;background:#ff4fa3;clip-path:polygon(0 0,100% 0,calc(100% - 70px) 100%,0 100%);}
@@ -638,8 +621,8 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
               <div class="m1-box-9">
                 <strong class="m1-strong-2">3,000M</strong>
                 <span class="m1-txt-3">PICA 마일리지 지급</span>
+                <span class="m1-fcfs">선착순</span>
               </div>
-              <div class="m1-days" aria-label="일차별 선착순 인원"><span class="m1-day"><span class="m1-day-h"><span class="m1-day-d">1일차</span></span><span class="m1-day-l">선착순</span><b class="m1-day-n">6,000<small>명</small></b></span><span class="m1-day"><span class="m1-day-h"><span class="m1-day-d">2일차</span></span><span class="m1-day-l">선착순</span><b class="m1-day-n">7,500<small>명</small></b></span><span class="m1-day"><span class="m1-day-h"><span class="m1-day-d">3일차</span></span><span class="m1-day-l">선착순</span><b class="m1-day-n">7,500<small>명</small></b></span></div>
             </div>
             <img class="m1-step-arrow" data-step-arrow="" data-reveal="" src="assets/images/arrow.svg" alt="" aria-hidden="true">
             <div class="m1-box-10">
@@ -652,8 +635,8 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
               <div class="m1-box-11">
                 <strong class="m1-strong-4">+10,000M</strong>
                 <span class="m1-txt-4">PICA 마일리지 추가 지급</span>
+                <span class="m1-fcfs">선착순</span>
               </div>
-              <div class="m1-days" aria-label="일차별 선착순 인원"><span class="m1-day"><span class="m1-day-h"><span class="m1-day-d">1일차</span></span><span class="m1-day-l">선착순</span><b class="m1-day-n">1,500<small>명</small></b></span><span class="m1-day"><span class="m1-day-h"><span class="m1-day-d">2일차</span></span><span class="m1-day-l">선착순</span><b class="m1-day-n">2,000<small>명</small></b></span><span class="m1-day"><span class="m1-day-h"><span class="m1-day-d">3일차</span></span><span class="m1-day-l">선착순</span><b class="m1-day-n">2,000<small>명</small></b></span></div>
             </div>
           </div>
           <div id="totalReward">
