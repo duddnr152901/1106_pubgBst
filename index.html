@@ -115,7 +115,7 @@ a.hdr-btn{color:#469CFF;}
 .kv-img-2{display:block;height:clamp(28px,2.4vw,44px);width:auto;aspect-ratio:2954/2843;}
 .kv-pica-logo{display:block;height:clamp(30px,2.6vw,48px);width:auto;aspect-ratio:534.6/181.3;}
 /* PC: 배그 로고는 왼쪽, 피카플레이 로고는 오른쪽으로 벌려 배치. 로고 줄 높이는 그대로 둬서 타이틀 위치는 변하지 않음 */
-@media (min-width:769px){
+@media (min-width:1025px){
 #kvBrandRow{width:min(100%,58vw);height:clamp(52px,5vw,90px);}
 #kvMainTitle{margin-top:clamp(-40px,-3vh,-16px);}
 #kvBrandRow .kv-img-2{display:none;}
@@ -133,7 +133,7 @@ a.hdr-btn{color:#469CFF;}
 .kv-sub-mo{display:none;}
 /* PC 기간 줄: 흰 글씨 + 검정 박스 (서브카피의 흰 테두리·글로우 제거) */
 .kv-sub-pc{display:inline-block;padding:.35em 2.6em;background:linear-gradient(90deg,rgba(75,15,49,0) 0%,rgba(75,15,49,.85) 22%,rgba(75,15,49,.85) 78%,rgba(75,15,49,0) 100%);color:#fff;-webkit-text-stroke:0;text-shadow:none;}
-@media (max-width:768px){.kv-sub-pc{display:none;}.kv-sub-mo{display:inline;}}
+@media (max-width:1024px){.kv-sub-pc{display:none;}.kv-sub-mo{display:inline;}}
 #kvSubBr{display:none;}
 /* PC 서브카피: 위·아래 줄은 서브카피 스타일, 가운데 "최대 39,000M"은 평행사변형 상자(양쪽 같은 방향 사선, 사방 핑크 테두리) 위에 크게 */
 #kvDatePc{position:relative;z-index:2;margin-top:clamp(-8px,-.6vh,-3px);display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.7vh,10px);text-align:center;}
@@ -239,7 +239,7 @@ a.hdr-btn{color:#469CFF;}
 .kv-btn-row.is-exp .kv-btn-lg{color:rgba(255,255,255,.5);}
 .kv-btn-row.is-open .kv-btn-b:hover .kv-btn-lg{color:#fff;}
 /* 모바일: 펼침 없이 처음부터 버튼 2개를 위아래로 (카카오 위, 스팀 아래) — 각자 8각형 + 바깥 1px 보더 */
-@media (max-width:768px){
+@media (max-width:1024px){
 .kv-btn-row{--p:0;width:min(76vw,300px);display:flex;flex-direction:column;gap:10px;}
 .kv-btn-b{position:relative;inset:auto;}
 .kv-btn-b .kv-btn-lg{height:auto;}
@@ -315,7 +315,7 @@ a.hdr-btn{color:#469CFF;}
 .m1-box-10 .m1-day-d{color:#fff;background:rgba(255,140,198,.12);box-shadow:inset 0 0 0 1px rgba(255,140,198,.8);}
 .m1-box-10 .m1-day-l,.m1-box-10 .m1-day-n small{color:#e5d6e0;}
 /* 모바일: 칸이 좁아 태그 · 선착순 · 인원 세로로 */
-@media (max-width:768px){.m1-day{flex-direction:column;justify-content:center;gap:6px;padding:10px 4px;}.m1-day-l{margin:0 0 -3px;}.m1-day-n{font-size:17px;}}
+@media (max-width:1024px){.m1-day{flex-direction:column;justify-content:center;gap:6px;padding:10px 4px;}.m1-day-l{margin:0 0 -3px;}.m1-day-n{font-size:17px;}}
 #totalReward{padding:1px;background:#e8288c;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-grid{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:stretch;background:radial-gradient(circle,rgba(255,255,255,.06) 0.9px,transparent 1.3px) 0 0/4px 4px,linear-gradient(180deg,#3a1730 0%,#2e1226 100%);clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-left{min-width:0;background:#ff4fa3;clip-path:polygon(0 0,100% 0,calc(100% - 70px) 100%,0 100%);}
@@ -469,8 +469,8 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
 </style>
 
 <!-- KV 첫 화면 이미지: CSS/JS를 기다리지 않고 바로 받아두기 위한 preload (PC는 와이드 배경, 모바일은 세로 배경) -->
-<link rel="preload" href="assets/images/kv/bg.webp" as="image" media="(min-width: 769px)">
-<link rel="preload" href="assets/images/kv/bgMo2.webp" as="image" media="(max-width: 768px)">
+<link rel="preload" href="assets/images/kv/bg.webp" as="image" media="(min-width: 1025px)">
+<link rel="preload" href="assets/images/kv/bgMo2.webp" as="image" media="(max-width: 1024px)">
 <link rel="preload" href="assets/images/title-set2.webp" as="image">
 <!-- 카카오톡 공유 SDK — assets/js/main.js의 SHARE_CONFIG.kakaoKey에 JavaScript 키를 넣어야 동작함 -->
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>

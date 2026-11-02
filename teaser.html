@@ -229,7 +229,7 @@ a.hdr-btn{color:#469CFF;}
 .teaser.t-anim #kvSubCopy:not(.t-in){translate:0 10px;}
 /* 굴러가기 전엔 쉼표·M도 숨김 → 롤링 시작과 함께 나타남 */
 /* 티저 PC 로고: index와 같은 좌표 (teaser.js가 PC에서 로고 줄을 KV 바로 아래로 옮김. top·폭·높이는 index의 타이틀 묶음 기준과 동일 공식) */
-@media (min-width:769px){
+@media (min-width:1025px){
 .teaser #kv > #kvBrandRow{position:absolute;z-index:31;top:clamp(40px,5vh,64px);left:50%;transform:translateX(-50%);width:min(calc(100% - 10vw),58vw);height:clamp(52px,5vw,90px);margin:0;}
 .teaser #kvBrandRow .kv-img-2{display:none;}
 .teaser #kvBrandRow .kv-img,.teaser #kvBrandRow .kv-pica-logo{position:absolute;top:50%;translate:0 calc(-50% - clamp(28px,3.7vh,46px));}
@@ -239,8 +239,8 @@ a.hdr-btn{color:#469CFF;}
 </style>
 
 <!-- KV 첫 화면 이미지: CSS/JS를 기다리지 않고 바로 받아두기 위한 preload (PC는 와이드 배경, 모바일은 세로 배경) -->
-<link rel="preload" href="assets/images/kv/bg.webp" as="image" media="(min-width: 769px)">
-<link rel="preload" href="assets/images/kv/bgMo2.webp" as="image" media="(max-width: 768px)">
+<link rel="preload" href="assets/images/kv/bg.webp" as="image" media="(min-width: 1025px)">
+<link rel="preload" href="assets/images/kv/bgMo2.webp" as="image" media="(max-width: 1024px)">
 <link rel="preload" href="assets/images/teaser-title.webp" as="image">
 <!-- 카카오톡 공유 SDK — assets/js/main.js의 SHARE_CONFIG.kakaoKey에 JavaScript 키를 넣어야 동작함 -->
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
