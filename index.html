@@ -31,6 +31,8 @@
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@noonnu/vitro-core@0.1.0/index.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<!-- CTA 애니메이션용 숫자 변수(--hl, --p) 등록. CSS @property와 같은 역할이지만, VS Code가 @property를 못 닫아 아래 코드 색이 깨져서 스크립트로 등록 -->
+<script>try{CSS.registerProperty({name:'--hl',syntax:'<number>',inherits:false,initialValue:'1'});CSS.registerProperty({name:'--p',syntax:'<number>',inherits:true,initialValue:'0'});}catch(e){}</script>
 <!-- 스타일 (CSS 파일 대신 페이지에 직접 포함) -->
 <style>
 /* 기본 */
@@ -190,8 +192,7 @@ a.hdr-btn{color:#469CFF;}
 .kv-btn-b .kv-btn-lg{height:100%;box-sizing:border-box;}
 /* 각 칸 바탕 판 */
 .kv-btn-lg::before{content:"";position:absolute;inset:0;z-index:-1;background:#1d171b;}
-/* 기본(펼치기 전) "지금 플레이"는 윗부분에만 흰 하이라이트 → 펼치면 서서히 사라짐 (--hl 숫자 애니메이션) */
-@property --hl{syntax:'<number>';inherits:false;initial-value:1;}
+/* 기본(펼치기 전) "지금 플레이"는 윗부분에만 흰 하이라이트 → 펼치면 서서히 사라짐 (--hl 숫자 애니메이션, 등록은 <style> 위 스크립트) */
 .kv-btn-y .kv-btn-lg::before{--hl:1;background:linear-gradient(to bottom,rgba(255,255,255,calc(var(--hl) * .16)) 0%,rgba(255,255,255,0) 55%),#1d171b;transition:--hl .45s ease;}
 .kv-btn-row.is-exp .kv-btn-y .kv-btn-lg::before{--hl:0;}
 /* 버튼 안쪽에 "최대 39,000M" 상자와 같은 금속 스크래치 텍스처 */
@@ -203,8 +204,7 @@ a.hdr-btn{color:#469CFF;}
 .kv-btn-b .kv-btn-sl{background:linear-gradient(100deg,#3576c9 0%,#1e4d96 100%);left:calc(50% - var(--d));}
 .kv-btn-row.is-open .kv-btn:hover .kv-btn-sl,.kv-btn:focus-visible .kv-btn-sl{width:calc(100% + 15px);}
 /* 보이는 영역: clip-path를 직접 transition하면 크롬이 GPU로 넘겨 끝나는 순간 1프레임 기본 모양으로 튀는 버그가 있음
-   → 진행값 --p(0 기본 ~ 1 펼침)만 transition하고 각 꼭짓점을 --p로 계산 (메인 스레드에서 그려져 튐 없음) */
-@property --p{syntax:'<number>';inherits:true;initial-value:0;}
+   → 진행값 --p(0 기본 ~ 1 펼침)만 transition하고 각 꼭짓점을 --p로 계산 (메인 스레드에서 그려져 튐 없음, --p 등록은 <style> 위 스크립트) */
 .kv-btn-row{--p:0;--q:calc(1 - var(--p));--xl:calc((50% - var(--w) / 2) * var(--q));--xr:calc(50% + var(--w) / 2 + (50% - var(--w) / 2) * var(--p));transition:--p .45s cubic-bezier(.65,0,.25,1);}
 .kv-btn-row.is-exp{--p:1;}
 @media (hover:none){.kv-btn-row{--p:1;}}
@@ -300,6 +300,11 @@ a.hdr-btn{color:#469CFF;}
 .m1-box-11{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,.8vh,10px);padding:clamp(18px,3vh,34px) 20px;text-align:center;background:url(assets/images/grunge-light2.webp) 0 0/320px repeat,linear-gradient(180deg,#5a1f47 0%,#3f1832 100%);box-shadow:0 14px 40px rgba(120,20,70,.14);}
 .m1-strong-4{font-family:'Pretendard',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(40px,4.2vw,68px);line-height:1;color:#ff6fb5;background:linear-gradient(180deg,#ff8cc6 30%,#ffcde5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 3px rgba(0,0,0,.7));}
 .m1-txt-4{font-size:clamp(14px,1vw,16px);font-weight:700;color:#e5d6e0;}
+.m1-soldout{display:flex;align-items:center;justify-content:center;width:100%;margin:0;padding:clamp(14px,2vh,20px) 20px;font-size:clamp(15px,1.15vw,19px);font-weight:800;line-height:1.4;color:#fff;text-align:center;word-break:keep-all;background:#3a3039;}
+.m1-soldout b{margin-right:.4em;color:#ff5cab;font-weight:800;}
+.m1-soldout--dark{background:#4d2140;}
+.is-soldout>.m1-box-7,.is-soldout>.m1-box-9,.is-soldout>.m1-box-11{position:relative;}
+.is-soldout>.m1-box-7::after,.is-soldout>.m1-box-9::after,.is-soldout>.m1-box-11::after{content:"";position:absolute;inset:0;background:rgba(20,14,20,.55);pointer-events:none;}
 .m1-fcfs{margin-top:clamp(2px,.4vh,6px);padding:.38em .9em .24em;font-size:clamp(15px,1.15vw,19px);font-weight:800;line-height:1.2;color:#fff;background:#e8288c;}
 #totalReward{padding:1px;background:#e8288c;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
 .m1-tr-grid{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:stretch;background:radial-gradient(circle,rgba(255,255,255,.06) 0.9px,transparent 1.3px) 0 0/4px 4px,linear-gradient(180deg,#3a1730 0%,#2e1226 100%);clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px),0 18px);}
@@ -361,6 +366,9 @@ a.hdr-btn{color:#469CFF;}
 .m2-deco-12{position:absolute;right:10px;bottom:22px;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f0c2e2,#6e2f5e);box-shadow:0 1px 1px rgba(0,0,0,.6);}
 .m2-item-slr{position:relative;display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5));}
 .m2-box-13{position:absolute;inset:0;overflow:hidden;pointer-events:none;mix-blend-mode:overlay;}
+.m2-box-3,.m2-box-9{position:relative;}
+.soldout{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(10,8,12,.72);pointer-events:none;}
+.soldout-stamp{display:block;width:min(62%,330px);aspect-ratio:2172/724;background:#f0479e;-webkit-mask:url(assets/images/soldoutImage.png) center/contain no-repeat;mask:url(assets/images/soldoutImage.png) center/contain no-repeat;transform:translateY(-30%) rotate(-14deg);filter:drop-shadow(0 6px 14px rgba(0,0,0,.55));}
 .m2-box-13::before{content:"";position:absolute;top:0;bottom:0;left:0;width:250%;background:linear-gradient(115deg,transparent 30%,rgba(110,170,255,.35) 42%,rgba(225,240,255,.55) 50%,rgba(90,140,255,.35) 58%,transparent 70%);animation:kvTitleSweep 3s cubic-bezier(.6,0,.4,1) infinite;will-change:transform;}
 .m2-txt-6{font-size:clamp(14px,1vw,16px);font-weight:600;color:#ff9ccd;}
 .m2-box-14{display:flex;flex-direction:column;gap:clamp(18px,2.4vh,28px);padding:clamp(24px,3.2vh,40px) clamp(18px,2.4vw,40px);background:radial-gradient(circle,rgba(255,255,255,.07) 0.9px,transparent 1.3px) 0 0/4px 4px,linear-gradient(180deg,#262325 0%,#1d1b1c 100%);box-shadow:inset 0 0 60px rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.16);transition:opacity .7s ease, transform .7s ease;}
@@ -613,7 +621,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
             <p class="m1-desc"><i class="m1-deco-3" aria-hidden="true"></i>매일 플레이하고, <b class="m1-em">마일리지 보급</b>을 획득하라!</p>
           </div>
           <div class="m1-box-5">
-            <div class="m1-box-6">
+            <div class="m1-box-6 is-soldout" data-step="1">
               <div class="m1-box-7">
                 <div class="m1-box-8">
                   <span class="m1-txt-2">// STEP 01</span>
@@ -625,9 +633,11 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
                 <span class="m1-txt-3">PICA 마일리지 지급</span>
                 <span class="m1-fcfs">선착순</span>
               </div>
+              <p class="m1-soldout" role="status" data-step-msg><span><b>1일차(11/6)</b>마일리지 소진! 내일 다시 도전하세요.</span></p>
+             <!-- <p class="m1-soldout" role="status" data-step-msg><span><b>3일차(11/8)</b>마일리지 소진!</span></p> -->
             </div>
             <img class="m1-step-arrow" data-step-arrow="" data-reveal="" src="assets/images/arrow.svg" alt="" aria-hidden="true">
-            <div class="m1-box-10">
+            <div class="m1-box-10" data-step="2">
               <div class="m1-box-7">
                 <div class="m1-box-8">
                   <span class="m1-txt-2">// STEP 02</span>
@@ -639,6 +649,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
                 <span class="m1-txt-4">PICA 마일리지 추가 지급</span>
                 <span class="m1-fcfs">선착순</span>
               </div>
+              <p class="m1-soldout m1-soldout--dark" role="status" data-step-msg><span><b>1일차(11/6)</b>현재 이벤트 진행 중</span></p>
             </div>
           </div>
           <div id="totalReward">
@@ -710,6 +721,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
             <span class="m2-txt-4">선착순 15,000명 지급</span>
           </div>
         </div>
+        <div class="soldout"><span class="soldout-stamp" role="img" aria-label="SOLD OUT"></span></div>
       </div>
       <img class="m2-step-arrow" data-step-arrow="" data-reveal="" data-reveal-x="1" src="assets/images/arrow.svg" alt="" aria-hidden="true">
       <div class="m2-box-9" data-reveal="" data-reveal-x="2">
@@ -734,6 +746,7 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
             <span class="m2-txt-6">선착순 10,000명 추가 지급</span>
           </div>
         </div>
+        <div class="soldout"><span class="soldout-stamp" role="img" aria-label="SOLD OUT"></span></div>
       </div>
     </div>
     <div class="m2-box-14" data-reveal="">
@@ -881,6 +894,28 @@ a.mileage-btn{display:inline-flex;align-items:center;justify-content:center;widt
 </div>
 
 <!-- 벚꽃 파티클 / 메인 스크립트(레이아웃·KV 연출·공유·PC방 토글) -->
+<script>
+/* ===== 일일 미션 상태 설정 (여기만 바꾸면 됩니다) =====
+   day   : 1, 2, 3  (1일차 11/6 · 2일차 11/7 · 3일차 11/8)
+   step1 / step2 : 'live' = 현재 이벤트 진행 중 / 'soldout' = 마일리지 소진(딤 처리) */
+var MISSION_STATE = { day: 3, step1: 'soldout', step2: 'live' };
+
+(function(s){
+  var DATES = { 1: '11/6', 2: '11/7', 3: '11/8' };
+  var label = s.day + '일차' + (DATES[s.day] ? '(' + DATES[s.day] + ')' : '');
+  [1, 2].forEach(function(n){
+    var card = document.querySelector('[data-step="' + n + '"]');
+    if (!card) return;
+    var soldout = s['step' + n] === 'soldout';
+    var msg = !soldout ? '현재 이벤트 진행 중'
+            : s.day === 3 ? '마일리지 소진!'
+            : '마일리지 소진! 내일 다시 도전하세요.';
+    card.classList.toggle('is-soldout', soldout);
+    var box = card.querySelector('[data-step-msg]');
+    if (box) box.innerHTML = '<span><b>' + label + '</b>' + msg + '</span>';
+  });
+})(MISSION_STATE);
+</script>
 <script src="assets/js/sakura.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
